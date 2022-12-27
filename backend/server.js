@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const connectDataBase = require("./Db/connectDatabes");
 const router = require("./routes/auth");
+const category = require("./routes/category");
 const errorHandler = require("./middleware/error");
 const privateRouter = require("./routes/private");
 
@@ -27,14 +28,14 @@ if (process.env.NODE_ENV === "development") {
 
 app.use("/api", router);
 app.use("/api", privateRouter);
-
+app.use("/api", category);
 // Error Handler Middleware
 app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`server is successfully, port ${PORT}`));
 
-process.on("unhandledRejection", (err, promise) => {
-    console.log(`Logged Error: ${err.message}`);
-    server.close(() => process.exit(1));
-  });
+// process.on("unhandledRejection", (err, promise) => {
+//     console.log(`Logged Error: ${err.message}`);
+//     server.close(() => process.exit(1));
+//   });
