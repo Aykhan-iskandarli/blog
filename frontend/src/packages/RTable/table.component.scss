@@ -1,0 +1,36 @@
+@import "../../assets/styles/abstracts";
+
+.table-section{
+  border-collapse: collapse;
+  width: 100%;
+  &__thead{
+    tr{
+      text-align: left;
+      background-color: $table-header-bg-color;
+      th{
+        padding: rem(10) rem(10) rem(10) rem(5);
+        font-family: $font-light;
+      }
+    }
+  }
+  &__tbody{
+    tr{
+      text-align: left;
+      td{
+        border-bottom: 1px solid $login-border-color;
+        padding: rem(10) rem(10) rem(10) rem(5);
+        font-family: $font-light;
+      }
+    }
+  }
+  &__tfoot{
+    tr{
+      text-align: left;
+      background-color: $table-header-bg-color;
+      th{
+        padding: rem(10) rem(10) rem(10) rem(5);
+        font-family: $font-light;
+      }
+    }
+  }
+}

@@ -1,0 +1,74 @@
+@import "../abstracts";
+
+.r-input {
+  font-family: $font-medium;
+  letter-spacing: rem(1);
+  color: $input-text-color;
+  width: 100%;
+  border: 1px solid $input-border-color;
+  border-radius: rem(6);
+  outline: none;
+  padding: rem(8) rem(15);
+  @include transition;
+
+  &:focus {
+    border: 1px solid $input-border-focus-color;
+    box-shadow: 0 0 5px 2px $input-focus-shadow-color;
+  }
+
+  &::placeholder {
+    opacity: 0.5;
+  }
+  &--dark {
+    background-color: $input-dark;
+    border: 1px solid $input-dark;
+    //color: $light;
+
+    &:focus {
+      border: 1px solid $input-dark;
+      box-shadow: none;
+    }
+  }
+}
+
+.err-txt{
+  color: red;
+  font-size: rem(14);
+}
+.r-checkbox {
+  width: rem(15);
+  height: rem(15);
+}
+
+.r-select {
+  letter-spacing: rem(1);
+  color: $input-text-color;
+  width: 100%;
+  border: 1px solid $input-border-color;
+  border-radius: rem(6);
+  outline: none;
+
+  &:focus {
+    border: 1px solid $input-border-focus-color;
+    box-shadow: 0 0 5px 2px $input-focus-shadow-color;
+  }
+}
+
+.r-textarea {
+  letter-spacing: rem(1);
+  color: $input-text-color;
+  width: 100%;
+  border: 1px solid $input-border-color;
+  border-radius: rem(6);
+  outline: none;
+
+  &:focus {
+    border: 1px solid $input-border-focus-color;
+    box-shadow: 0 0 5px 2px $input-focus-shadow-color;
+  }
+}
+
+.r-label {
+  color: $label-color;
+  font-size: rem(10);
+}

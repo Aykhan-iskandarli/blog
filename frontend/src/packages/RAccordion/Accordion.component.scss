@@ -1,0 +1,63 @@
+@import "../../assets/styles/abstracts";
+
+.accordion{
+  height: rem(50);
+  overflow: hidden;
+  transition: height 0.25s ease-out;
+  &__active{
+    height: auto;
+    transition: height 0.25s ease-in;
+  }
+  &__img{
+    transform: rotate(180deg);
+  }
+  &__heading{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  &__left{
+    display: flex;
+    align-items: center;
+    gap: rem(10);
+  }
+  &__color{
+    padding: rem(3);
+    width: rem(46);
+    height: rem(46);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $font-bold;
+    color: $black;
+  }
+  &__name{
+    font-family: $font-semi-bold;
+    font-size: rem(14);
+    color: $txt-primary;
+  }
+  &__right{
+    display: flex;
+    align-items: center;
+    gap: rem(15);
+    button{
+      display: flex;
+      align-items: center;
+      gap: rem(5);
+      background-color: $white;
+      border-radius: rem(12);
+      border: 1px solid $border-btn;
+      padding: rem(5) rem(7);
+      font-size: rem(11);
+      cursor: pointer;
+    }
+    img{
+      transition: all ease 0.2s;
+      cursor: pointer;
+    }
+  }
+  &__body{
+    margin-top: rem(25);
+  }
+}

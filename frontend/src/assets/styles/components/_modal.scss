@@ -1,0 +1,51 @@
+
+@import "../abstracts/";
+
+.modal__dialog--modal_wrapper {
+    background: $white;
+    box-shadow: $modal-shadow;
+     border-radius: rem(19);
+
+    width: rem(594);
+    height: rem(269);
+    display: flex;
+    align-items: center;
+    .modal_title{
+      display: flex;
+      width: 100%;
+      justify-content: center;
+     margin: 0;
+     text-align: center;
+     margin-top: rem(50);
+    }
+    .modal_content {
+      display: flex;
+      border-radius: rem(19);
+      align-items: center;
+      height: 100%;
+      padding: 0 rem(76);
+      p {
+        font-family: $font-medium;
+        font-weight: 400;
+        font-size: rem(14);
+        line-height: rem(17);
+        color: $blue-txt-dark;
+        text-align: center;
+        margin: rem(18) rem(0) rem(40) rem(0);
+      }
+    }
+    .modal_btns {
+      display: flex;
+      justify-content: center;
+      margin-bottom: rem(36);
+      button{
+        &:not(:last-child){
+          margin-right: rem(12);
+        }
+        border-radius: rem(19);
+        width: rem(73);
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }

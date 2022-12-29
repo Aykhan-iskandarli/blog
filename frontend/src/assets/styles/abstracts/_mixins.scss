@@ -1,0 +1,31 @@
+@mixin transition($property: all, $time: 0.5s, $func: ease) {
+  transition: $property $time $func;
+}
+
+@mixin breakpoint($breakpoint, $direction: "max") {
+  @media screen and (#{$direction}-width: $breakpoint) {
+    @content;
+  }
+}
+
+@mixin scrollbars($size: 7px, $foreground-color: $scrollbar, $background-color: transparent) {
+  &::-webkit-scrollbar {
+    width:  $size;
+    height: $size;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $foreground-color;
+    border-radius: 50px;
+
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $background-color;
+  }
+
+  & {
+    scrollbar-face-color: $foreground-color;
+    scrollbar-track-color: $background-color;
+  }
+}
