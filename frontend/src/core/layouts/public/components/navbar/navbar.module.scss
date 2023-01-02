@@ -1,0 +1,28 @@
+@import "../../../../../assets/styles/abstracts/";
+
+.navbar{
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    height: rem(80);
+    display: flex;
+    align-items: center;
+    &_container{
+        
+    }
+    &_left{
+       svg{
+        width: rem(60);
+        height: rem(60);
+        color: #9cecfb; /* fallback for old browsers */
+      
+       }
+    }
+    &_right{
+        a{
+          &:not(:last-child){
+            margin-right: rem(15);
+          }
+          color: gray;
+          font-size: rem(16);
+        }
+    }
+}

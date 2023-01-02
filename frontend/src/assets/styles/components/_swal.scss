@@ -1,0 +1,148 @@
+.swal2-modal {
+  width: rem(580) !important;
+border-radius: $border-radius!important;
+  * {
+    font-family: $font;
+    color: $int_main;
+  }
+}
+
+.swal2-title {
+  font-size: rem(20) !important;
+  padding: rem(40) rem(20) 0 rem(20) !important;
+  margin-bottom: rem(10) !important;
+}
+
+.swal-text {
+
+}
+
+.swal2-html-container {
+  font-size: rem(16) !important;
+  padding: 0 rem(55) !important;
+  text-align: center !important;
+  margin: 0 !important;
+}
+
+.swal2-input {
+  //padding: 20px 15px;
+
+  font-family: $font-medium !important;
+  letter-spacing: rem(1) !important;
+  color: $int_main !important;
+  width: auto !important;
+  border: 1px solid $gray_9 !important;
+  border-radius: $border-radius !important;
+  outline: none !important;
+  background-color: $gray_7 !important;
+  margin-top: rem(5) !important;
+  @include transition;
+
+  &:focus {
+    border: 1px solid $input-border-focus-color !important;
+    box-shadow: 0 0 5px 2px $input-focus-shadow-color !important;
+  }
+
+  &::placeholder {
+    opacity: 0.5 !important;
+  }
+
+  &--dark {
+    background-color: $input-dark !important;
+    border: 1px solid $input-dark !important;
+    color: $light !important;
+
+    &:focus {
+      border: 1px solid $input-dark !important;
+      box-shadow: none !important;
+    }
+  }
+}
+.swal2-input-label{
+  margin-left: rem(40)!important;
+  margin-top: rem(40)!important;
+  font-size: rem(14)!important;
+}
+
+.swal2-cancel {
+  text-shadow: none !important;
+  line-height: rem(21) !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  will-change: opacity, transform !important;
+  border-radius: $border-radius !important;
+  outline: none !important;
+  border: 1px solid !important;
+  font-size: rem(14) !important;
+  padding: rem(12) !important;
+  width: rem(150) !important;
+  @include transition(all, 0.3s, ease-out);
+  //&--confirm{
+  //  color: $button-text-color !important;
+  //  background-color: $success-button-color;
+  //  border-color: $success-button-color;
+  //
+  //  &:hover{
+  //    background-color: $success-button-color!important;
+  //  }
+  //}
+  background-color: $white !important;
+  color: $dark-button-color !important;
+  border-color: $dark-button-color !important;
+
+  &:hover {
+    background: white !important;
+  }
+
+  &:focus {
+    box-shadow: none !important;
+  }
+
+}
+
+.swal2-confirm {
+  text-shadow: none !important;
+  line-height: rem(21) !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  will-change: opacity, transform !important;
+  border-radius: $border-radius !important;
+  outline: none !important;
+  border: 1px solid !important;
+  font-size: rem(14) !important;
+  padding: rem(12) !important;
+  width: rem(150) !important;
+  @include transition(all, 0.3s, ease-out);
+  color: $button-text-color !important;
+  background-color: $success-button-color !important;
+  border-color: $success-button-color !important;
+
+
+  &:hover {
+    background: $success-button-color !important;
+  }
+
+  &:focus {
+    box-shadow: none !important;
+  }
+  &--danger{
+    background-color: $danger-button-color !important;
+    color: white !important;
+    border-color: $danger-button-color!important;
+    &:hover {
+      background: $danger-button-color !important;
+      color: white!important;
+    }
+  }
+}
+
+.swal-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.swal2-actions {
+  flex-direction: row-reverse !important;
+  margin-top: rem(40)!important;
+}
+

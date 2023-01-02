@@ -1,0 +1,77 @@
+{
+  "az": {
+    "header": {
+      "about": "Haqqında",
+      "info": "Məlumatlar",
+      "faq": "FAQ",
+      "contact": "Əlaqə"
+    },
+    "home": {
+      "title": "Ana Sehife"
+    },
+    "footer": {
+      "about": "Haqqında",
+      "info": "Məlumatlar",
+      "services": "Servislər",
+      "apps": "Mobil tətbiqlər",
+      "faq": "FAQ",
+      "contact": "Əlaqə",
+      "subscription": {
+        "news": "Yeniliklərdən xəbərdar ol",
+        "email": "Email",
+        "send": "Göndər"
+      },
+      "copyright": "Bütün hüquqlar gorunur © 2022 "
+    }
+  },
+  "ru": {
+    "header": {
+      "about": "О нас",
+      "faq": "FAQ",
+      "info": "Информации",
+      "contact": "Контакт"
+    },
+    "home": {
+      "title": "Ana Sehife RU"
+    },
+    "footer": {
+      "about": "О нас",
+      "info": "Информация",
+      "services": "Услуги",
+      "apps": "Мобильные приложения",
+      "faq": "Часто задаваемые вопросы",
+      "contact": "Контакт",
+      "subscription": {
+        "news": "Будьте в курсе",
+        "email": "Эл. адрес",
+        "send": "Отправлять"
+      },
+      "copyright": "Все права защищены © 2022"
+    }
+  },
+  "en": {
+    "header": {
+      "about": "About",
+      "info": "Informations",
+      "faq": "FAQ",
+      "contact": "Contact"
+    },
+    "home": {
+      "title": "Ana Sehife EN"
+    },
+    "footer": {
+      "about": "About",
+      "info": "Information",
+      "services": "Services",
+      "apps": "Mobile applications",
+      "faq": "FAQ",
+      "contact": "Contact",
+      "subscription": {
+        "news": "Stay up to date",
+        "email": "Email",
+        "send": "Send"
+      },
+      "copyright": "All rights reserved © 2022"
+    }
+  }
+}

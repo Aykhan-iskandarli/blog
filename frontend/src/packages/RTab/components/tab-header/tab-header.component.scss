@@ -1,0 +1,10 @@
+@import "../../../../assets/styles/abstracts";
+
+.tab-header{
+  cursor: pointer;
+  font-family: $font-light;
+  &.active{
+    border-bottom: 2px solid $tab;
+    color: $tab;
+  }
+}

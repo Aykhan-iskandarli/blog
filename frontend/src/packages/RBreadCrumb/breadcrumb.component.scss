@@ -1,0 +1,9 @@
+@import "../../assets/styles/abstracts";
+
+.breadcrumb{
+  display: flex;
+  a{
+    font-family: $font-light;
+    color: black;
+  }
+}

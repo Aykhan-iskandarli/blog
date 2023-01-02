@@ -1,0 +1,81 @@
+@import "../../assets/styles/abstracts/";
+
+.accardion_section {
+  //   height: rem(732);
+  //   display: flex;
+  //   align-items: center;
+  background-color: $bg_second_color;
+  padding: rem(60) 0;
+  .accardion_wrapper {
+    h1 {
+      margin-bottom: rem(50);
+    }
+    .accardion_list {
+      .accardion_list_item {
+        border-radius: $Bradius;
+        background-color: $white;
+        padding: rem(13) rem(16);
+        box-shadow: $boxShadowCat;
+        border: rem(1) solid $white;
+        transition: all 0.3s;
+        &.active {
+          border: 1px solid $main;
+        }
+        &:not(:last-child) {
+          margin-bottom: rem(10);
+        }
+        .accardion_title {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          position: relative;
+          cursor: pointer;
+          p {
+            width: 90%;
+            font-size: rem(16);
+            color: $text_color;
+          }
+          .accardion_icon {
+            width: rem(32);
+            height: rem(32);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.4s ease;
+            background-color: $accColor;
+            color: $primary;
+            &.active {
+              transform: rotate(180deg);
+              transition: all 0.4s ease;
+              background-color: $primary;
+              color: $white;
+            }
+          }
+        }
+        .answer_container {
+          transition: all 0.3s;
+          .accardion_answer {
+            overflow: hidden;
+            transition: all 0.3s;
+            height: 0;
+            opacity: 0;
+            margin-right: rem(36);
+            &.content_show {
+              height: fit-content;
+              //   max-height: fit-content;
+              opacity: 1;
+            }
+          }
+          .acc_divider {
+            margin: rem(20) 0;
+            background-color: $borderColor;
+          }
+          p {
+            padding-bottom: rem(6);
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+@import "../../assets/styles/abstracts";
+
+
+.tab-wrapper{
+  width: 100%;
+  &__header{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid $tab-border-bottom;
+  }
+  &__contents{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

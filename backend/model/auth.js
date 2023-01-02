@@ -6,6 +6,15 @@ const crypto = require("crypto")
 mongoose.set('strictQuery', false);
 
 const UserSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: [true, "please provide a name"],
+    maxLength: [26, "max length is 26 "],
+    trim: true,
+    lowercase:true,
+    index:true,
+    unique:true
+  },
   name: {
     type: String,
     required: [true, "please provide a name"],
@@ -27,9 +36,21 @@ const UserSchema = new mongoose.Schema({
     minlength: 6,
     select: false,
   },
+  salt:String,
+  about:{
+    type:String
+  },
+  role:{
+    type:Number,
+    default:0
+  },
+  photo:{
+    data:Buffer,
+    contentType:String
+  },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
-});
+},{timestamps:true});
 
 UserSchema.pre("save", async function () {
   if (!this.isModified("password")) {

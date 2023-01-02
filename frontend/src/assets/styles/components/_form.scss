@@ -1,0 +1,123 @@
+@import "../abstracts";
+
+.r-input {
+  font-family: $font-medium;
+  letter-spacing: rem(1);
+  color: $int_main;
+  width: 100%;
+  border: 1px solid $gray_9;
+  border-radius: $border-radius;
+  outline: none;
+  background-color: $gray_7;
+  display: flex;
+  align-items: center;
+  position: relative;
+  resize: none;
+
+  @include transition;
+
+  &::-ms-reveal,
+  &::-ms-clear {
+    display: none;
+  }
+
+
+  &::-ms-expand {
+    display: none;
+  }
+
+
+
+  &:focus {
+    border: 1px solid $input-border-focus-color;
+    box-shadow: 0 0 5px 2px $input-focus-shadow-color;
+  }
+
+  &::placeholder {
+    opacity: 0.5;
+  }
+
+  &--dark {
+    background-color: $input-dark;
+    border: 1px solid $input-dark;
+    color: $light;
+
+    &:focus {
+      border: 1px solid $input-dark;
+      box-shadow: none;
+    }
+  }
+}
+
+.r-input-gray {
+  color: #9599A0;
+  border: none;
+  outline: none;
+  width: 100%;
+  background-color: #F8F8F8;
+}
+
+.r-checkbox {
+  width: rem(15);
+  height: rem(15);
+}
+
+.input-wrapper{
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    padding: 4px;
+    border-bottom: 2px solid black;
+    border-right: 2px solid black;
+    transform: rotate(45deg);
+    right: 20px;
+    bottom: 22px;
+    z-index: 2;
+  }
+}
+
+.r-select {
+  letter-spacing: rem(1);
+  color: $input-text-color;
+  width: 100%;
+  position: relative;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  //border: 1px solid $input-border-color;
+  border-radius: rem(6);
+  outline: none;
+
+  &:focus {
+    border: 1px solid $input-border-focus-color;
+    box-shadow: 0 0 5px 2px $input-focus-shadow-color;
+  }
+}
+
+.r-textarea {
+  letter-spacing: rem(1);
+  color: $input-text-color;
+  width: 100%;
+  border: 1px solid $input-border-color;
+  border-radius: rem(6);
+  outline: none;
+
+  &:focus {
+    border: 1px solid $input-border-focus-color;
+    box-shadow: 0 0 5px 2px $input-focus-shadow-color;
+  }
+}
+
+.r-label {
+  color: $label-color;
+  font-size: rem(10);
+  &--lg{
+    font-size: 14px;
+  }
+}
+
+.err-txt{
+  color: red;
+  font-size: rem(14);
+}

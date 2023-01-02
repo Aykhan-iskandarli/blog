@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const connectDataBase = require("./Db/connectDatabes");
-const router = require("./routes/auth");
+const auth = require("./routes/auth");
 const category = require("./routes/category");
 const tags = require("./routes/tags");
 const errorHandler = require("./middleware/error");
@@ -21,13 +21,13 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(cors())
 //cors
 if (process.env.NODE_ENV === "development") {
     app.use(cors({origin:`${process.env.CLIENT_URL}`}));
 }
 
-app.use("/api", router);
+app.use("/api", auth);
 app.use("/api", privateRouter);
 app.use("/api", category);
 app.use("/api", tags);

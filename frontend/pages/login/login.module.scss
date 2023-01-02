@@ -1,0 +1,22 @@
+@import "../../src/assets/styles/abstracts/";
+
+.login{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: rem(150);
+    &_container{
+        width: rem(400);
+        display: flex;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        padding: rem(20);
+    }
+    &_form{
+        height: 100%;
+    }
+    &_btn{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+}

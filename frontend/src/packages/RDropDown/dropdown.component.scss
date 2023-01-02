@@ -1,0 +1,38 @@
+@import "../../assets/styles/abstracts";
+
+.dropdown{
+  position: relative;
+  &__button{
+    cursor: pointer;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    color: white;
+  }
+  &__items{
+    background-color: white;
+    position: absolute;
+    top: rem(44);
+    left: 0;
+    min-width: rem(150);
+    z-index: 10;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14);
+    border-radius: rem(5);
+    &-list{
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      li{
+        padding: rem(8) rem(12);
+        font-size: rem(16);
+        font-family: $font-light;
+        color: $modal-title;
+        &:hover {
+          color: $dropdown-text-color-hover;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

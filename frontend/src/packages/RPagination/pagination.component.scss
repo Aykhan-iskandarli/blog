@@ -1,0 +1,50 @@
+@import "../../assets/styles/abstracts";
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    li {
+        padding: rem(8);
+        margin: rem(5);
+        height: rem(32);
+        width: rem(32);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: $lgWeight;
+        font-size: $fontSizeSm;
+        line-height: rem(18);
+        box-shadow: $boxShadowCard;
+        color: $darkColor;
+        background-color: $white;
+    }
+
+    .disable {
+        pointer-events: auto !important;
+        cursor: not-allowed !important;
+    }
+
+    .btn--transparent {
+        background-color: transparent;
+      
+        img {
+            max-width: none;
+            width: rem(10);
+            height:rem(10);
+        }
+    }
+    .prev_btn_div, .next_btn_div{
+        box-shadow: none ;
+
+    }
+}
+
+
+.pagi_active {
+    background-color: $main;
+    border-radius: $Bradius;
+    background-color: $accColor !important;
+}
