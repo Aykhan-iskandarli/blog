@@ -7,5 +7,6 @@ export interface IDropdown {
 export interface IPublicReduxState {
     lang: string,
     loading: boolean,
-    error:[]
+    error:[],
+    user:[]
 }

@@ -5,8 +5,7 @@ import LoadingComponent from 'packages/RLoading/loading.component'
 import React,{useEffect, useState} from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { isAuth } from 'src/core/layouts/public/helpers/common-functions/common-functions'
-import { register } from 'src/core/layouts/public/store/actions'
+import {  register } from 'src/core/layouts/public/store/actions'
 import css from "./singup.module.scss"
 
 const SignUpComponent = () => {
@@ -38,9 +37,9 @@ const SignUpComponent = () => {
 
   }
 
-  useEffect(()=>{
-    isAuth() && Router.push("/")
-  },[])
+  // useEffect(()=>{
+  //   isAuth() && Router.push("/")
+  // },[])
 
   return (
     <div className={css.signin}>

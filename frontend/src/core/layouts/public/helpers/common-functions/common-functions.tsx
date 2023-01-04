@@ -5,14 +5,4 @@ export function GetLang(): any {
 
 }
 
-export const isAuth = () => {
-  if (process.browser) {
-    if (localStorage.getItem("authToken")) {
-      return localStorage.getItem("authToken");
-    } else {
-      return false;
-    }
-  }
-};
-
 

@@ -9,6 +9,7 @@ const category = require("./routes/category");
 const tags = require("./routes/tags");
 const errorHandler = require("./middleware/error");
 const privateRouter = require("./routes/private");
+const blog = require("./routes/blog");
 
 //app
 const app = express();
@@ -21,6 +22,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser())
 app.use(cors())
 //cors
 if (process.env.NODE_ENV === "development") {
@@ -31,6 +33,7 @@ app.use("/api", auth);
 app.use("/api", privateRouter);
 app.use("/api", category);
 app.use("/api", tags);
+app.use("/api", blog);
 
 // Error Handler Middleware
 app.use(errorHandler);

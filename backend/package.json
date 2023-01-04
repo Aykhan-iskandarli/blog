@@ -15,12 +15,17 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-jwt": "^8.2.1",
     "express-validator": "^6.14.2",
+    "formidable": "^2.1.1",
     "jsonwebtoken": "^9.0.0",
+    "lodash": "^4.17.21",
     "mongoose": "^6.8.1",
     "morgan": "^1.10.0",
     "nodemailer": "^6.8.0",
     "nodemon": "^2.0.20",
-    "slugify": "^1.6.5"
+    "shortid": "^2.2.16",
+    "slugify": "^1.6.5",
+    "string-strip-html": "^4.4.1"
   }
 }

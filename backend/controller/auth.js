@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const ErrorResponse = require("../utils/errorResponse");
 const sendEmail = require("../utils/sendEmail");
 const dotenv = require("dotenv");
+const shortID = require("shortid")
 
 dotenv.config();
 
@@ -13,10 +14,15 @@ exports.register = async (req, res,next) => {
     if (exsistUser) {
       return next(new ErrorResponse("This email already exsist", 404));
     }
+
+    let username = shortID.generate()
+    let profile = `${process.env.CLIENT_URL}/profile/${username}`
     const user = await User.create({
       name,
       email,
       password,
+      username,
+      profile
     });
     sendToken(user,201,res)
   } catch (error) {
@@ -46,6 +52,13 @@ exports.login = async (req, res,next) => {
   } catch (error) {
     next(error)
   }
+};
+
+exports.signout = (req, res) => {
+  res.clearCookie('token');
+  res.json({
+      message: 'Signout success'
+  });
 };
 
 
@@ -135,6 +148,8 @@ exports.resetPassword = async (req, res, next) => {
 
 const sendToken = (user,statusCode,res) =>{
   const token = user.getSingedToken()
-  res.status(statusCode).json({success:true,token})
+  res.cookie("token",token,{expiresIn:"1d"})
+  const {_id,role,email,name,username} = user
+  res.status(statusCode).json({success:true,token,user:{_id,role,email,name,username}})
 }
 

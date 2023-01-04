@@ -7,4 +7,5 @@ const base = "/api/";
 export const API = {
   register: environment + base + "register",
   login: environment + base + "login",
+  logout: environment + base + "signout",
 };

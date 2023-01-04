@@ -5,8 +5,7 @@ import LoadingComponent from "packages/RLoading/loading.component";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { isAuth } from "src/core/layouts/public/helpers/common-functions/common-functions";
-import { login } from "src/core/layouts/public/store/actions";
+import { isAuth, login } from "src/core/layouts/public/store/actions";
 import css from "./login.module.scss";
 
 const LoginComponent = () => {
@@ -28,12 +27,13 @@ const LoginComponent = () => {
   const handleSubmit = (e:any) =>{
     e.preventDefault()
    dispatch(login(inputValue))
+ 
   }
   
+  console.log(isAuth(),"log")
   useEffect(()=>{
     isAuth() && Router.push("/")
   },[])
-
   return (
     <div className={css.login}>
       {loading && <LoadingComponent/>}

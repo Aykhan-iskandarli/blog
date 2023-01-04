@@ -1,56 +1,63 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto")
+const crypto = require("crypto");
 
-mongoose.set('strictQuery', false);
+mongoose.set("strictQuery", false);
 
-const UserSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: [true, "please provide a name"],
-    maxLength: [26, "max length is 26 "],
-    trim: true,
-    lowercase:true,
-    index:true,
-    unique:true
+const UserSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      required: [true, "please provide a name"],
+      maxLength: [26, "max length is 26 "],
+      trim: true,
+      lowercase: true,
+      index: true,
+      unique: true,
+    },
+    name: {
+      type: String,
+      required: [true, "please provide a name"],
+      maxLength: [26, "max length is 26 "],
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: [true, "Please provide email address"],
+      unique: true,
+      match: [
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        "Please provide a valid email",
+      ],
+    },
+    password: {
+      type: String,
+      required: [true, "Please add a password"],
+      minlength: 6,
+      select: false,
+    },
+    profile: {
+      type: String,
+      required: true,
+    },
+    salt: String,
+    about: {
+      type: String,
+    },
+    role: {
+      type: Number,
+      default: 0,
+    },
+    photo: {
+      data: Buffer,
+      contentType: String,
+    },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
   },
-  name: {
-    type: String,
-    required: [true, "please provide a name"],
-    maxLength: [26, "max length is 26 "],
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: [true, "Please provide email address"],
-    unique: true,
-    match: [
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      "Please provide a valid email",
-    ],
-  },
-  password: {
-    type: String,
-    required: [true, "Please add a password"],
-    minlength: 6,
-    select: false,
-  },
-  salt:String,
-  about:{
-    type:String
-  },
-  role:{
-    type:Number,
-    default:0
-  },
-  photo:{
-    data:Buffer,
-    contentType:String
-  },
-  resetPasswordToken: String,
-  resetPasswordExpire: Date,
-},{timestamps:true});
+  { timestamps: true }
+);
 
 UserSchema.pre("save", async function () {
   if (!this.isModified("password")) {
@@ -66,9 +73,9 @@ UserSchema.methods.matchPassword = async function (password) {
 };
 
 UserSchema.methods.getSingedToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
-  });
+  return jwt.sign({id: this._id}, process.env.JWT_SECRET,
+    {expiresIn: process.env.JWT_EXPIRE}
+  );
 };
 
 UserSchema.methods.getResetPasswordToken = function () {

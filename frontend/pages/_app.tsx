@@ -9,7 +9,8 @@ import NProgress from "nprogress"; //nprogress module
 import "nprogress/nprogress.css"; //styles of nprogress
 import  Router  from "next/router";
 import { useEffect } from "react";
-import { isAuth } from "src/core/layouts/public/helpers/common-functions/common-functions";
+import PrivateComponent from "components/private/private.component";
+import { isAuth } from "src/core/layouts/public/store/actions";
 
 export default function App({ Component, pageProps }: AppProps) {
  Router.events.on("routeChangeStart", () => NProgress.start());
@@ -17,15 +18,17 @@ export default function App({ Component, pageProps }: AppProps) {
  Router.events.on("routeChangeError", () => NProgress.done());
 
 
- useEffect(()=>{
-  isAuth() && Router.push("/")
- },[])
+//  useEffect(()=>{
+//   isAuth() && Router.push("/")
+//  },[])
 
   return (
  <Provider store={store}>
- <LayoutComponent>
+  <PrivateComponent>
+  <LayoutComponent>
       <Component {...pageProps} />
     </LayoutComponent>
+  </PrivateComponent>
  </Provider>
   );
 }

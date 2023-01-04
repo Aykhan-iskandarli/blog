@@ -1,10 +1,10 @@
 const express = require("express");
 const { getPrivateData } = require("../controller/private");
-const { protect } = require("../middleware/auth");
+const { protect, authmiddleWare } = require("../middleware/auth");
 
 const privateRouter = express.Router()
 
-privateRouter.route("/private").get(protect,getPrivateData);
+privateRouter.route("/profile").get(protect,getPrivateData,authmiddleWare);
 
 module.exports = privateRouter
 

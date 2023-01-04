@@ -1,83 +1,156 @@
-import 'reflect-metadata';
+import "reflect-metadata";
 import { Dispatch } from "react";
 import { container } from "tsyringe";
-import {AuthActionTypes, IActionCreator, publicConstants } from "./action-types";
-import { langType } from '../../../../assets/db/db.service';
-import { Auth } from '../services/public.service';
+import {
+  AuthActionTypes,
+  IActionCreator,
+  publicConstants,
+} from "./action-types";
+import { langType } from "../../../../assets/db/db.service";
+import { Auth } from "../services/public.service";
 import jwt_decode from "jwt-decode";
-import Router from 'next/router';
+import Router from "next/router";
 
-const auth:any = container.resolve(Auth);
+const auth: any = container.resolve(Auth);
 export const loginSuccess = (user: any) => ({
-    type: AuthActionTypes.SIGN_IN,
-    payload: user
-})
-export const loginFail = (err:any) => ({
-    type: AuthActionTypes.SIGN_IN_FAIL,
-    payload:err
-})
+  type: AuthActionTypes.SIGN_IN,
+  payload: user,
+});
+export const loginFail = (err: any) => ({
+  type: AuthActionTypes.SIGN_IN_FAIL,
+  payload: err,
+});
 
 export const loading = (loading: boolean) => ({
-    type: publicConstants.LOADING,
-    payload: loading
-})
+  type: publicConstants.LOADING,
+  payload: loading,
+});
 export const localizationSucces = (localization: langType) => ({
-    type: publicConstants.LOCALIZATION_TOGGLE,
-    payload: localization
-})
-export const localizationToggle = (lang: langType) => (
-    (dispatch: Dispatch<IActionCreator>) => {
-        dispatch(localizationSucces(lang))
-        window.location.reload()
-    }
-)
+  type: publicConstants.LOCALIZATION_TOGGLE,
+  payload: localization,
+});
+export const localizationToggle =
+  (lang: langType) => (dispatch: Dispatch<IActionCreator>) => {
+    dispatch(localizationSucces(lang));
+    window.location.reload();
+  };
 
 export const setUserData = (token: string) => (dispatch: any) => {
-    try {
-        const token_decode = jwt_decode(token)
-        console.log(token_decode,"token_decode")
-        dispatch(loginSuccess(token_decode))
-    }
-    catch (error) {
-        console.error(error)
-    }
-}
+  try {
+    const token_decode = jwt_decode(token);
+    dispatch(loginSuccess(token_decode));
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 export const logOut = () => (dispatch: any) => {
-    dispatch({
-        type: AuthActionTypes.SIGN_OUT
-    })
-    localStorage.removeItem('authToken')
-    Router.push("/login")
+  dispatch(loading(true));
+  dispatch({
+    type: AuthActionTypes.SIGN_OUT,
+  });
+  auth
+  .logout()
+  .then((res: any) => {
+    dispatch(loading(false));
+    removeCookie("token");
+    removeLocalStorage("user");
+    Router.push("/");
+  })
+  .catch((err:any)=>{
+    console.log(err)
+  })
 
-}
-
+  Router.push("/login");
+};
 
 export const register = (data: any) => (dispatch: any) => {
-    dispatch(loading(true))
-    auth.register(data).then((res: any) => {
-        console.log(res,"Aaas")
-        dispatch(loading(false))
-        localStorage.setItem('authToken', res.data.token)
-        dispatch(setUserData(res.data.token))
-        Router.push("/")
-    }).catch((err:any) => {
-        dispatch(loading(false))
-        dispatch(loginFail(err))
+  dispatch(loading(true));
+  auth
+    .register(data)
+    .then((res: any) => {
+      dispatch(loading(false));
+      Router.push("/login");
     })
-}
-
+    .catch((err: any) => {
+      dispatch(loading(false));
+      dispatch(loginFail(err));
+    });
+};
 
 export const login = (data: any) => (dispatch: any) => {
-    dispatch(loading(true))
-    auth.login(data).then((res: any) => {
-        dispatch(loading(false))
-        localStorage.setItem('authToken', res.data.token)
-        dispatch(setUserData(res.data.token))
-        Router.push("/")
-    }).catch((err:any) => {
-        dispatch(loading(false))
-        dispatch(loginFail(err))
+  dispatch(loading(true));
+  auth
+    .login(data)
+    .then((res: any) => {
+      dispatch(loading(false));
+      //   localStorage.setItem('user', JSON.stringify(res.data.user))
+      dispatch(setUserData(res.data.token));
+      authenticate(res.data);
+      Router.push("/");
     })
-}
+    .catch((err: any) => {
+      dispatch(loading(false));
+      dispatch(loginFail(err));
+    });
+};
 
+import cookie from "js-cookie";
+// set cookie
+export const setCookie = (key: any, value: any) => {
+  if (process.browser) {
+    cookie.set(key, value, {
+      expires: 1,
+    });
+  }
+};
+
+export const removeCookie = (key: any) => {
+  if (process.browser) {
+    cookie.remove(key, {
+      expires: 1,
+    });
+  }
+};
+
+// get cookie
+// export const getCookie = (key: any) => {
+//   if (process.browser) {
+//     if (cookie.get(key)) {
+//         console.log(key,"ola")
+//       cookie.get(key);
+//     }
+//   }
+// };
+
+// // localstorage
+export const setLocalStorage = (key: any, value: any) => {
+  if (process.browser) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+};
+
+export const removeLocalStorage = (key: any) => {
+  if (process.browser) {
+    localStorage.removeItem(key);
+  }
+};
+
+// autheticate user by pass data to cookie and localstorage
+export const authenticate = (data: any) => {
+  setCookie("token", data.token);
+  setLocalStorage("user", data.user);
+};
+export const isAuth = () => {
+  if (process.browser) {
+    const cookieChecked: any = cookie.get("token");
+    if (cookieChecked) {
+      if (localStorage.getItem("user")) {
+        const item =  JSON.parse(localStorage.getItem("user") || 'null');
+        return item
+      } else {
+        return false;
+      }
+    }
+  }
+};

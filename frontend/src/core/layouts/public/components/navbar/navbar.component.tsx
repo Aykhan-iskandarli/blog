@@ -3,18 +3,17 @@ import React, { useEffect, useState } from 'react'
 import css from "./navbar.module.scss"
 import {GiAbstract014} from "react-icons/gi"
 import { useDispatch } from 'react-redux'
-import { logOut } from '../../store/actions'
+import { isAuth, logOut } from '../../store/actions'
 import ButtonComponent from 'packages/RButton/button.component'
-import { isAuth } from '../../helpers/common-functions/common-functions'
 
 const NavbarComponent = () => {
   const dispatch:any = useDispatch()
- const [auth,setAuth] = useState("")
+ const [auth,setAuth] = useState<any>("")
  const token:any = isAuth();
-
+ console.log(auth.name,"token")
   useEffect(()=>{
     setAuth(token? token :"")
-  },[token])
+  },[])
   return (
     <div className={css.navbar}>
       <div className="container">
@@ -38,7 +37,12 @@ const NavbarComponent = () => {
                   </Link>
                 </>
               ) : (
+                <div className='row align-center'>
+                  {
+                    <span className='mr-15'>{auth?.name}</span>
+                  }
                 <ButtonComponent click={()=>dispatch(logOut())}>Log out</ButtonComponent>
+                </div>
               )}
             </div>
           </div>

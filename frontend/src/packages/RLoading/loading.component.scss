@@ -3,13 +3,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
+  position: fixed;
   z-index: 99999;
     top: 0;
     left: 0;
     background-color: rgba(34, 34, 34, 0.5);
     width: 100%;
-    height: 100%;
+    height: 100vh;
 
   .lds-ripple {
     display: inline-block;

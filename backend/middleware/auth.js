@@ -22,6 +22,44 @@ exports.protect = async (req,res,next) =>{
         req.user = user
         next()
     } catch (error) {
-        return next(new ErrorResponse("Not authorized to access this route alaaaa", 401))
+        return next(new ErrorResponse("Token invalid", 401))
     }
 }
+
+exports.adminMiddleWare = (req, res, nex) => {
+  const adminUserId = req.user._id;
+  console.log(adminUserId,"adminUserId")
+  User.findById(
+    { _id: adminUserId }.exec((err, user) => {
+      if (err || !user) {
+        return res.status(400).json({
+          error: "User not found",
+        });
+      }
+      if (user.role !== 1) {
+        return res.status(400).json({
+          error: "Admin resource access denied",
+        });
+      }
+
+      req.profile = user;
+      next();
+    })
+  );
+};
+
+exports.authmiddleWare = (req, res, nex) => {
+    const userId = req.user._id;
+    console.log(userId,"userid")
+    User.findById(
+      { _id: userId }.exec((err, user) => {
+        if (err || !user) {
+          return res.status(400).json({
+            error: "User not found",
+          });
+        }
+        req.profile = user;
+        next();
+      })
+    );
+  };
