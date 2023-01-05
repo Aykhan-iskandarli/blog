@@ -11,7 +11,6 @@ import { useSelector } from 'react-redux'
 const NavbarComponent = () => {
   const dispatch:any = useDispatch()
   const auth:any = useSelector((state: any) => state.publicState.auth)
-  console.log(auth)
   const user:any = useSelector((state: any) => state.publicState.user)
   const token =  Cookies.get("token")
   useEffect(() => {

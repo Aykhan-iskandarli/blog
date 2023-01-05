@@ -15,7 +15,6 @@ export class ApiInterceptor extends RequestInterceptor {
     }
 
     request() {
-        store.dispatch(toggleLoading(true));
         this.intercept().use((req:any) => {
             req.headers = {
                 ...req.headers,
@@ -23,7 +22,7 @@ export class ApiInterceptor extends RequestInterceptor {
                 "Accept-Language": GetLang()
             };
 
-
+            store.dispatch(toggleLoading(true));
             return req;
         })
     }

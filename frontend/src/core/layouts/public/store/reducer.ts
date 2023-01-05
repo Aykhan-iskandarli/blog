@@ -3,6 +3,7 @@ import {
   AuthActionTypes,
   IActionCreator,
   publicConstants,
+  toggleLoadingActions,
 } from "./action-types";
 
 const initialState: IPublicReduxState = {
@@ -20,6 +21,11 @@ export const publicReducer = (state = initialState, action: IActionCreator) => {
         ...state,
         loading: action.payload,
       };
+      case toggleLoadingActions.TOGGLE_LOADING:
+        return {
+          ...state,
+          loading: action.payload,
+        };
     case AuthActionTypes.SIGN_IN_FAIL:
       return {
         ...state,

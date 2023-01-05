@@ -51,7 +51,7 @@ export const localizationToggle =
 export const setUserData = (token: string) => (dispatch: any) => {
   try {
     const token_decode = jwt_decode(token);
-    console.log(token_decode,"token_decode")
+
     dispatch(loginSuccess(token_decode));
   } catch (error) {
     console.error(error);
@@ -91,7 +91,6 @@ export const login = (data: any) => (dispatch: any) => {
   auth
     .login(data)
     .then((res: any) => {
-      console.log(res,"daaaaaaaa")
       //   localStorage.setItem('user', JSON.stringify(res.data.user))
       dispatch(setUserData(res.data.token));
       authenticate(res.data);
