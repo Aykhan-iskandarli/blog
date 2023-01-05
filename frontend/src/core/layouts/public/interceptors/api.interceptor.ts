@@ -1,9 +1,11 @@
+import  Router  from 'next/router';
 import { useDispatch } from 'react-redux';
+import store from 'src/root store';
 import { injectable } from 'tsyringe';
 import { RequestInterceptor } from '../../../../packages/VHttp/interceptors/request.interceptor';
 import { ResponseInterceptor } from '../../../../packages/VHttp/interceptors/response.interceptor';
-import history from "../configs/history.config";
-import { GetLang, getToken } from '../helpers/common-functions/common-functions';
+import { GetLang } from '../helpers/common-functions/common-functions';
+import { toggleLoading } from '../store/actions';
 
 @injectable()
 export class ApiInterceptor extends RequestInterceptor {
@@ -13,12 +15,11 @@ export class ApiInterceptor extends RequestInterceptor {
     }
 
     request() {
-        document.body.classList.add('loading-indicator');
-
+        store.dispatch(toggleLoading(true));
         this.intercept().use((req:any) => {
             req.headers = {
                 ...req.headers,
-                Authorization: 'Bearer ' + getToken(),
+                // Authorization: 'Bearer ' + getToken(),
                 "Accept-Language": GetLang()
             };
 
@@ -34,20 +35,19 @@ export class ApiInterceptorResponse extends ResponseInterceptor {
     }
 
     response() {
-        document.body.classList.remove('loading-indicator');
         this.interceptor().use((res:any) => {
+            store.dispatch(toggleLoading(false));
             return res;
         }, (error:any) => {
-            document.body.classList.remove('loading-indicator');
+            store.dispatch(toggleLoading(false));
             if (error.response) {
-                document.body.classList.remove('loading-indicator');
                 switch (error.response.status) {
                     case 401:
-                        history.replace('/auth/login')
-                        localStorage.removeItem('authToken');
+                        Router.push('/auth/login')
+                        localStorage.removeItem('token');
                         break;
                     case 404:
-                        history.replace('/error/not-found')
+                        Router.push('/error/not-found')
                         break;
                     case 500:
                         break;
@@ -61,4 +61,3 @@ export class ApiInterceptorResponse extends ResponseInterceptor {
         });
     }
 }
-

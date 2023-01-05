@@ -10,6 +10,7 @@ const initialState: IPublicReduxState = {
   loading: false,
   error: [],
   user: [],
+  auth:false
 };
 
 export const publicReducer = (state = initialState, action: IActionCreator) => {
@@ -28,7 +29,13 @@ export const publicReducer = (state = initialState, action: IActionCreator) => {
       return {
         ...state,
         user: action.payload,
+        auth:true
       };
+      case AuthActionTypes.SIGN_OUT:
+        return {
+          ...state,
+          auth:false
+        };
     default:
       return state;
   }

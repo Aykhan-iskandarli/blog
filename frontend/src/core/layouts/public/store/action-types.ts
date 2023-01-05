@@ -18,8 +18,8 @@ export enum DropdownLang {
     GET_DROPDOWN_LANG_ERROR = "GET_DROPDOWN_LANG_ERROR"
 }
 
-export enum LeftMenuActionTypes {
-    TOGGLE_LEFT_MENU = 'TOGGLE-LEFT-MENU'
+export enum toggleLoadingActions {
+    TOGGLE_LOADING = 'TOGGLE_LOADING'
 }
 export enum publicConstants {
     LOCALIZATION_TOGGLE = 'LOCALIZATION_TOGGLE',

@@ -149,7 +149,7 @@ exports.resetPassword = async (req, res, next) => {
 const sendToken = (user,statusCode,res) =>{
   const token = user.getSingedToken()
   res.cookie("token",token,{expiresIn:"1d"})
-  const {_id,role,email,name,username} = user
-  res.status(statusCode).json({success:true,token,user:{_id,role,email,name,username}})
+  // const {_id,role,email,name,username} = user
+  res.status(statusCode).json({success:true,token})
 }
 

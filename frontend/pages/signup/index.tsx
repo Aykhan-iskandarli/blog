@@ -14,7 +14,6 @@ const SignUpComponent = () => {
     email:"",
     password:"",
   })
-  const loading:any = useSelector((state: any) => state.publicState.loading)
   const {name,email,password} = inputValue
 
   const handleChange = (e:any) =>{
@@ -43,7 +42,6 @@ const SignUpComponent = () => {
 
   return (
     <div className={css.signin}>
-      {loading && <LoadingComponent/>}
       <div className={css.signin_container}>
         <div className="container">
           <div className={css.signin_title}>
