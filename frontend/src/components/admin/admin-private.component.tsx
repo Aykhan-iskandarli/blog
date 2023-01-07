@@ -1,0 +1,22 @@
+import Cookies from 'js-cookie'
+import  Router  from 'next/router'
+import React, { useEffect } from 'react'
+import { useSelector } from 'react-redux'
+
+const AdminPrivateComponent = ({children}:any) => {
+  const user:any = useSelector((state: any) => state.publicState.user)
+  const token = Cookies.get("token")
+  useEffect(()=>{
+    if(!token ){
+      Router.push(`/login`);
+    }
+    else if(user.role !== 1){
+      Router.push(`/`);
+    }
+  },[])
+  return (
+    <div>{children}</div>
+  )
+}
+
+export default AdminPrivateComponent

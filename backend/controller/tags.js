@@ -1,5 +1,5 @@
 const slugify = require("slugify")
-const Categories = require("../model/categories")
+const Tags = require("../model/tags")
 const customError = require("../middleware/customError")
 const ErrorResponse = require("../utils/errorResponse")
 
@@ -7,7 +7,7 @@ exports.TagCreate = async (req,res,next) =>{
     const {name} = req.body
     let = slug = slugify(name).toLowerCase()
 
-    let Tag = new Categories ({name,slug})
+    let Tag = new Tags ({name,slug})
     if(!name){
         return next(new ErrorResponse("name is required", 400));
     }
@@ -24,7 +24,7 @@ exports.TagCreate = async (req,res,next) =>{
 
 exports.TagList = async (req,res,next) =>{
     try {
-        const Tags = await  Categories.find({})
+        const Tags = await  Tags.find({})
         if(!Tags){
             return next(new ErrorResponse("Tags is not found", 404));
         }
@@ -41,7 +41,7 @@ exports.TagRead = async (req,res,next) =>{
     const slug = req.params.slug.toLowerCase()
 
     try {
-        const Tag = await  Categories.findOne({slug})
+        const Tag = await  Tags.findOne({slug})
         if(!Tag){
             return next(new ErrorResponse("Tag is not found", 404));
         }
@@ -60,8 +60,8 @@ exports.TagRemove = async (req,res,next) =>{
     const slug = req.params.slug.toLowerCase()
 
     try {
-        const Tag = await  Categories.findOneAndRemove({slug})
-        if(!Tags){
+        const Tag = await  Tags.findOneAndRemove({slug})
+        if(!Tag){
             return next(new ErrorResponse("Tag is not found", 404));
         }
         res.status(200).json({
