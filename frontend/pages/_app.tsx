@@ -10,7 +10,6 @@ import "nprogress/nprogress.css"; //styles of nprogress
 import  Router  from "next/router";
 import { useEffect } from "react";
 import PrivateComponent from "components/private/private.component";
-import { isAuth } from "src/core/layouts/public/store/actions";
 
 export default function App({ Component, pageProps }: AppProps) {
  Router.events.on("routeChangeStart", () => NProgress.start());
@@ -28,7 +27,7 @@ export default function App({ Component, pageProps }: AppProps) {
   <LayoutComponent>
       <Component {...pageProps} />
     </LayoutComponent>
-  </PrivateComponent>
+    </PrivateComponent>
  </Provider>
   );
 }

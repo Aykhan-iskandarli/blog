@@ -8,5 +8,6 @@ export interface IPublicReduxState {
     lang: string,
     loading: boolean,
     error:[],
-    user:[]
+    user:[],
+    auth:boolean
 }
