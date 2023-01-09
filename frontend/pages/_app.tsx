@@ -16,18 +16,11 @@ export default function App({ Component, pageProps }: AppProps) {
  Router.events.on("routeChangeComplete", () => NProgress.done());
  Router.events.on("routeChangeError", () => NProgress.done());
 
-
-//  useEffect(()=>{
-//   isAuth() && Router.push("/")
-//  },[])
-
   return (
  <Provider store={store}>
-  <PrivateComponent>
   <LayoutComponent>
       <Component {...pageProps} />
     </LayoutComponent>
-    </PrivateComponent>
  </Provider>
   );
 }
