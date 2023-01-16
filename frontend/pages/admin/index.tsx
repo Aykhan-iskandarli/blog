@@ -1,4 +1,3 @@
-import AdminPrivateComponent from "components/admin/admin-private.component";
 import Cookies from "js-cookie";
 import { AppProps } from "next/app";
 import React, { useEffect } from "react";

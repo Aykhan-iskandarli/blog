@@ -32,6 +32,7 @@ export const publicReducer = (state = initialState, action: IActionCreator) => {
         error: action.payload,
       };
     case AuthActionTypes.SIGN_IN:
+      console.log(action.payload,"aa")
       return {
         ...state,
         user: action.payload,

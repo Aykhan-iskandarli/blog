@@ -52,12 +52,6 @@ export const setUserData = (token: string) => (dispatch: any) => {
   try {
     const token_decode:any = jwt_decode(token);
     dispatch(loginSuccess(token_decode));
-    if(token && token_decode && token_decode.role === 1){
-      Router.push("/admin")
-    }
-    else{
-      Router.push("/user")
-    }
   } catch (error) {
     console.error(error);
   }
@@ -96,6 +90,7 @@ export const login = (data: any) => (dispatch: any) => {
   auth
     .login(data)
     .then((res: any) => {
+      console.log(res,"rrrrrrrrrrr")
       //   localStorage.setItem('user', JSON.stringify(res.data.user))
       dispatch(setUserData(res.data.token));
       authenticate(res.data);

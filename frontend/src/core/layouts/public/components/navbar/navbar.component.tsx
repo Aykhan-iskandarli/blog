@@ -13,9 +13,7 @@ const NavbarComponent = () => {
   const auth:any = useSelector((state: any) => state.publicState.auth)
   const user:any = useSelector((state: any) => state.publicState.user)
   const token =  Cookies.get("token")
-  useEffect(() => {
-    token && dispatch(setUserData(token));
-  }, [dispatch, token]);
+
   return (
     <div className={css.navbar}>
       <div className="container">

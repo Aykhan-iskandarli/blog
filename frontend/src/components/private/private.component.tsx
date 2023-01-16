@@ -1,8 +1,8 @@
 import Cookies from "js-cookie";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { userAgent } from "next/server";
 import LoadingComponent from "packages/RLoading/loading.component";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
@@ -19,16 +19,51 @@ const PrivateComponent = ({ children }: any) => {
   const interceptorRes: any = container.resolve(ApiInterceptorResponse);
   const token = Cookies.get("token");
   const dispatch: any = useDispatch();
+  const [showContent,setShowContent] = useState(false)
+  const {pathname} = useRouter()
+  const AccessUrl = {
+    admin:[
+      "/admin",
+      "/"
+    ],
+    user:[
+      "/user",
+      "/",
+      "/user/blog",
+    ]
+  }
+  
+  useEffect(()=>{
+    token && dispatch(setUserData(token))
+
+  },[dispatch])
+
   useEffect(() => {
-    token && dispatch(setUserData(token));
     if (!token) {
       Router.push("/login");
-    } else if (token && user.role === 1) {
-      Router.push("/admin");
-    } else if (token && user.role === 0) {
-      Router.push("/user");
+    } else {
+      switch (user.role) {
+        case 1:
+          if (!AccessUrl.admin.includes(pathname)) {
+            Router.push("/admin");
+          } else {
+            setShowContent(true);
+          }
+          break;
+        case 0:
+          if (!AccessUrl.user.includes(pathname)) {
+            Router.push("/user");
+          } else {
+            setShowContent(true);
+          }
+          break;
+        default:
+          break;
+      }
     }
-  }, [token, dispatch, user.role]);
+  }, [token,user,pathname]);
+
+
   return (
     <div>
       {loading && <LoadingComponent />}
