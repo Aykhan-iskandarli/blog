@@ -24,5 +24,12 @@
           color: gray;
           font-size: rem(16);
         }
+        &_user{
+          a{
+            border: rem(1) solid $blue-light;
+            padding: rem(10) rem(20);
+            border-radius: rem(6);
+          }
+        }
     }
 }

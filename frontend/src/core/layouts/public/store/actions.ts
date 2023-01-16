@@ -64,15 +64,12 @@ export const logOut = () => (dispatch: any) => {
   auth
   .logout()
   .then((res: any) => {
-    dispatch(setUserData(res.data.token));
     removeCookie("token");
     Router.push("/login");
   })
   .catch((err:any)=>{
     console.log(err)
   })
-
-  Router.push("/login");
 };
 
 export const register = (data: any) => (dispatch: any) => {
@@ -90,10 +87,10 @@ export const login = (data: any) => (dispatch: any) => {
   auth
     .login(data)
     .then((res: any) => {
-      console.log(res,"rrrrrrrrrrr")
       //   localStorage.setItem('user', JSON.stringify(res.data.user))
       dispatch(setUserData(res.data.token));
       authenticate(res.data);
+      Router.push("/");
     })
     .catch((err: any) => {
       dispatch(loginFail(err));

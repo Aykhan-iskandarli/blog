@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import  Router  from 'next/router';
 import { useDispatch } from 'react-redux';
 import store from 'src/root store';
@@ -13,12 +14,12 @@ export class ApiInterceptor extends RequestInterceptor {
         super();
         this.request();
     }
-
     request() {
+    const token = Cookies.get("token");
         this.intercept().use((req:any) => {
             req.headers = {
                 ...req.headers,
-                // Authorization: 'Bearer ' + getToken(),
+                Authorization: 'Bearer ' + token,
                 "Accept-Language": GetLang()
             };
 
@@ -42,7 +43,7 @@ export class ApiInterceptorResponse extends ResponseInterceptor {
             if (error.response) {
                 switch (error.response.status) {
                     case 401:
-                        Router.push('/auth/login')
+                        Router.push('/login')
                         localStorage.removeItem('token');
                         break;
                     case 404:

@@ -5,7 +5,6 @@ import type { NextFetchEvent, NextRequest } from 'next/server';
 export function middleware(req:NextRequest){
     const token =req.cookies.get("token");
     const { pathname, origin } = req.nextUrl
-
     if(req.nextUrl.pathname.startsWith('/login')){
         if (token) {
             return NextResponse.redirect(`${origin}`)
@@ -13,7 +12,7 @@ export function middleware(req:NextRequest){
     }
     else if(req.nextUrl.pathname.startsWith(`${origin}`)){
       if (!token) {
-        return NextResponse.redirect(`${origin}/login`)
+        return NextResponse.redirect(`${origin}`)
       }
       else{
         return NextResponse.next()

@@ -8,4 +8,7 @@ export const API = {
   register: environment + base + "register",
   login: environment + base + "login",
   logout: environment + base + "signout",
+
+  category: environment + base + "category",
+  categories: environment + base + "categories",
 };

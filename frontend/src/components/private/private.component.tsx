@@ -24,7 +24,9 @@ const PrivateComponent = ({ children }: any) => {
   const AccessUrl = {
     admin:[
       "/admin",
-      "/"
+      "/",
+      "/admin/crud/category-tag",
+      "/admin/crud/blog"
     ],
     user:[
       "/user",
@@ -35,7 +37,6 @@ const PrivateComponent = ({ children }: any) => {
   
   useEffect(()=>{
     token && dispatch(setUserData(token))
-
   },[dispatch])
 
   useEffect(() => {

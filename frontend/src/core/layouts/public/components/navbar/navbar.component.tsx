@@ -39,7 +39,10 @@ const NavbarComponent = () => {
               ) : (
                 <div className='row align-center'>
                   {
-                    <span className='mr-15'>{user?.name}</span>
+                    <div className={`mr-20 ${css.navbar_right_user}`}>
+                      <span className='mr-15'>{user?.name}</span>
+                      <Link href={`${user.role===1 ? '/admin':"/user"}`}>{user.role ===1 ? "Admin route" :"User route"}</Link>
+                    </div>
                   }
                 <ButtonComponent click={()=>dispatch(logOut())}>Log out</ButtonComponent>
                 </div>
