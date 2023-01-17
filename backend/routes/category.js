@@ -15,6 +15,6 @@ router.route("/category").post(protect, CategoriesValidator, categoryCreate);
 router.route("/categories").get(protect, categoryList);
 router.route("/category/:slug").get(protect, categoryRead);
 router.route("/category/:slug").delete(protect, categoryRemove);
-router.route("/category/:slug").put(protect, categoryUpdate);
+router.route("/category/:id").put(protect, categoryUpdate);
 
 module.exports = router;

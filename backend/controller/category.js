@@ -76,18 +76,22 @@ exports.categoryRemove = async (req, res, next) => {
 
 
 exports.categoryUpdate = async (req, res, next) => {
-    const slug = req.params.slug.toLowerCase()
+    // const slug = req.params.slug.toLowerCase()
     const id = req.params.id
+    const {name,slug} = req.body
+    if (!req.body) {
+        return next(new ErrorResponse("Data to update can not be empty!", 404));
+    }
     try {
-        const category = await Categories.findOne(id)
-        console.log(category,"cat")
+        const category = await Categories.findByIdAndUpdate(id,{name,slug},{new:true})
         if (!category) {
             return next(new ErrorResponse("category is not found", 404));
+        }else{
+            res.status(200).json({
+                success: true,
+                data: category
+            })
         }
-        res.status(200).json({
-            success: true,
-            data: category
-        })
     } catch (error) {
         next(error)
     }
