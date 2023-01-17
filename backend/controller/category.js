@@ -8,6 +8,7 @@ exports.categoryCreate = async (req, res, next) => {
     let  slug = slugify(name).toLowerCase()
 
     let category = new Categories({ name, slug })
+
     if (!name) {
         return next(new ErrorResponse("name is required", 400));
     }
@@ -24,13 +25,28 @@ exports.categoryCreate = async (req, res, next) => {
 
 exports.categoryList = async (req, res, next) => {
     try {
-        const category = await Categories.find({})
+        let { page, size } = req.query
+        if (!page) page = 1;
+        if (!size) size = 10;
+        const limit = parseInt(size)
+        const skip = (page - 1) * size
+
+        const category = await Categories.find({}).limit().skip(skip)
+        let totalPage = await Categories.countDocuments()
+        console.log(totalPage,"pagi")
         if (!category) {
             return next(new ErrorResponse("category is not found", 404));
         }
         res.status(200).json({
             success: true,
-            data: category
+            data: category,
+            page:{
+                totalCount:totalPage,
+                pageIndex:page,
+                pageSize:size,
+                previous:false,
+                next:false
+            }
         })
     } catch (error) {
         next(error)
@@ -76,26 +92,33 @@ exports.categoryRemove = async (req, res, next) => {
 
 
 exports.categoryUpdate = async (req, res, next) => {
-    // const slug = req.params.slug.toLowerCase()
-    const id = req.params.id
-    const {name,slug} = req.body
-    if (!req.body) {
-        return next(new ErrorResponse("Data to update can not be empty!", 404));
-    }
-    try {
-        const category = await Categories.findByIdAndUpdate(id,{name,slug},{new:true})
-        if (!category) {
-            return next(new ErrorResponse("category is not found", 404));
-        }else{
-            res.status(200).json({
-                success: true,
-                data: category
-            })
+  const slug = req.params.slug?.toLowerCase();
+  // const id = req.params.id
+  // const {name,slug} = req.body
+  if (!req.body) {
+      return next(new ErrorResponse("Data to update can not be empty!", 404));
+  }
+  try {
+    const category = await Categories.findOne(slug);
+    if (!category) {
+      return next(new ErrorResponse("category is not found", 404));
+    } else {
+      category.slug = req.body.slug;
+      category.name = req.body.name;
+
+      category.save((err) => {
+        if (err) {
+          res.send(err);
         }
-    } catch (error) {
-        next(error)
+        res
+          .status(200)
+          .json({ message: "Category updated successfully", category });
+      });
     }
-}
+  } catch (error) {
+    next(error);
+  }
+};
 
 
 
