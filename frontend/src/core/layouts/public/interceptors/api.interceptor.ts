@@ -47,7 +47,7 @@ export class ApiInterceptorResponse extends ResponseInterceptor {
                         localStorage.removeItem('token');
                         break;
                     case 404:
-                        Router.push('/error/not-found')
+                        // Router.push('/error/not-found')
                         break;
                     case 500:
                         break;

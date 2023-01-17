@@ -1,1 +1,34 @@
 @import "../../../../src/assets/styles/abstracts/";
+.category{
+    &_list{
+    margin-top: rem(0);
+        li{
+            padding: rem(8) rem(8);
+            border: rem(1) solid $blue;
+            border-radius: rem(8);
+            margin-top: rem(15);
+            display: flex;
+            width: rem(100);
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+
+            color: $blue;
+            &:not(:last-child){
+                margin-right: rem(15);
+            }
+        }
+        &_name{
+            font-weight: 500;
+    
+        }
+        &_delete{
+            span{
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                cursor: pointer;
+            }
+        }
+    }
+}

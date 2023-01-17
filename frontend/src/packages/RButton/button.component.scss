@@ -2,11 +2,12 @@
 
 .btn {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: rem(3);
   padding: rem(13) rem(20);
   text-shadow: none;
-  font-size: rem(10);
+  font-size: rem(16);
   //color: $main-button-text-area-color;
   cursor: pointer;
   font-weight: 500;

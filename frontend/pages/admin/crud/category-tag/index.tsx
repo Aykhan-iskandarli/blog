@@ -1,38 +1,91 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import ButtonComponent from 'packages/RButton/button.component';
+import InputComponent from 'packages/RInput/input.component';
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux'
-import { getCategory } from 'store/category/store/action'
+import { deleteCategoryData, getCategory, postCategoryData } from 'store/category/store/action'
 import css from "./category-tag.module.scss"
+import {FiDelete} from "react-icons/fi"
 
 const CategoryAndTagComponent = () => {
   const categoryList: any = useSelector((state: any) => state.category?.category);
   const dispatch:any = useDispatch()
+  const [inputValue,setInputValue] = useState({
+    name:""
+  })
+
+  const {name} = inputValue
 
 useEffect(()=>{
   dispatch(getCategory())
 },[])
 
-
 const showCategories  = useCallback((category:any)=>{
-  console.log(category,"cat")
+  
+const handleDelete = async(slug:any) =>{
+   await dispatch(deleteCategoryData(slug))
+   dispatch(getCategory())
+}
   return (
-    <div>
+    <ul className={`row ${css.category_list}`}>
       {
-        category && category?.map((cat:any,index:number)=>(
-        <div key={index}>
-            {cat?.name}
-          </div>
-        ))
+        category.length>0 ? category?.map((cat:any,index:number)=>(
+          console.log(cat),
+          <li key={index}>
+            <div className={css.category_list_name}>
+              <b> {cat?.name}</b>
+            </div>
+            <div className={css.category_list_delete}>
+              <span onClick={() => handleDelete(cat.slug)}> <FiDelete /></span>
+            </div>
+          </li>
+        )):<h1>Not found category list</h1>
       }
-    </div>
+    </ul>
   )
-},[categoryList])
+},[dispatch,categoryList])
+
+const handleChange = (e:any) =>{
+  const {name,value} = e.target
+  setInputValue({...inputValue,[name]:value})
+}
+const handleSubmit = async(e:any) =>{
+  e.preventDefault()
+  if(name !==""){
+   await dispatch(postCategoryData(inputValue))
+   dispatch(getCategory())
+  }
+  setInputValue({
+    name:""
+  })
+}
+  const showCategoriesForm = useCallback(() => {
+    return (
+      <div>
+        <form onSubmit={handleSubmit}>
+          <div className="row">
+          <div className='col-3'>
+          <InputComponent maxLength={15} onChange={handleChange} name="name" value={name}/>
+          </div>
+          <div>
+            <ButtonComponent type='submit' size={"lg"} width={160}>Submit</ButtonComponent>
+          </div>
+          </div>
+        </form>
+      </div>
+    )
+  }, [inputValue])
 
   
   return (
     <div className={css.category}>
-      <h1>Category list</h1>
+     <div className="container-fluid">
+     <h1>Category list</h1>
+      {showCategoriesForm()}
+      <div className="col-3">
       {showCategories(categoryList)}
+      </div>
+     </div>
     </div>
   )
 }

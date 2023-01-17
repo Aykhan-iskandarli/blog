@@ -16,5 +16,6 @@ export interface InputProps {
   inputCont?: String,
   show?: function,
   close?: function,
-  onKeyDown?:function
+  onKeyDown?:function,
+  maxLength?:number
 }

@@ -12,7 +12,8 @@ import { useEffect } from "react";
 import PrivateComponent from "components/private/private.component";
 import Cookies from "js-cookie";
 import PublishContentComponent from "components/publish-content/publish-content.component";
-
+import '../src/core/shared/toast/toast.scss'
+import 'react-toastify/dist/ReactToastify.css'
 export default function App({ Component, pageProps }: AppProps) {
   Router.events.on("routeChangeStart", () => NProgress.start());
   Router.events.on("routeChangeComplete", () => NProgress.done());

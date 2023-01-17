@@ -1,0 +1,56 @@
+@import "../../../assets/styles/abstracts/index";
+
+.toast-mes {
+  font-size: rem(14);
+  font-weight: 600;
+  line-height: 1.43;
+  color: $gray;
+  display: flex;
+  align-items: center;
+  .success svg {
+    fill: $gray;
+    color: $gray;
+  }
+  .warning svg {
+    fill: $gray;
+    color: $gray;
+  }
+  .error svg {
+    fill: $gray;
+    color: $gray;
+  }
+  .info svg {
+    fill: $gray;
+    color: $gray;
+  }
+  svg {
+    margin-right: 10px;
+    margin-left: 3px;
+  }
+}
+.Toastify__toast {
+  .Toastify__progress-bar {
+    &--success {
+      // background: $gray !important;
+    }
+    &--warning {
+      // background: $gray !important;
+    }
+    &--error {
+      // background: $gray !important;
+    }
+    &--info {
+      // background: $gray !important;
+    }
+  }
+  background-color: white;
+  // border-left: 5px solid $gray;
+  // border-radius: 0.75*$gray;
+  padding-right: 20px;
+  height: 70px;
+  box-shadow: 0 8px 20px 0 rgba(224, 224, 224, 0.5);
+  z-index: 19892427;
+  .Toastify__close-button {
+    display: none;
+  }
+}
