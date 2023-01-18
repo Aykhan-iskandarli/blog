@@ -4,45 +4,44 @@ const { ObjectId } = mongoose.Schema;
 const blogSchema = new mongoose.Schema(
   {
     title: {
-      type: String,
-      trim: true,
-      min: 3,
-      max: 160,
-      required: true,
+        type: String,
+        trim: true,
+        min: 3,
+        max: 160,
+        required: true
     },
     slug: {
-      type: String,
-      unique: true,
-      index: true,
+        type: String,
+        unique: true,
+        index: true
     },
     body: {
-      type: {},
-      required: true,
-      min: 200,
-      max: 2000000,
+        type: {},
+        required: true,
+        min: 200,
+        max: 2000000
     },
     excerpt: {
-      type: String,
-      max: 1000,
+        type: String,
+        max: 1000
     },
     mtitle: {
-      type: String,
+        type: String
     },
     mdesc: {
-      type: String,
+        type: String
     },
     photo: {
-      data: Buffer,
-      contentType: String,
+        data: Buffer,
+        contentType: String
     },
-    categories: [{ type: ObjectId, ref: "Category", required: true }],
-    tags: [{ type: ObjectId, ref: "Tag", required: true }],
+    categories: [{ type: ObjectId, ref: 'Categories', required: true }],
+    tags: [{ type: ObjectId, ref: 'Tags', required: true }],
     postedBy: {
-      type: ObjectId,
-      ref: "User",
-    },
-  },
-  { timestamp: true }
+        type: ObjectId,
+        ref: 'User'
+    }
+},
 );
 
 module.exports = mongoose.model("Blog", blogSchema);

@@ -10,7 +10,7 @@ const { errorHandler } = require("../middleware/customError");
 const { smartTrim } = require('../helpers/blog');
 
 exports.create = (req, res) => {
-   
+
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
   form.parse(req, (err, fields, files) => {
@@ -23,29 +23,29 @@ exports.create = (req, res) => {
     const { title, body, categories, tags } = fields;
 
 
-            if (!title || !title.length) {
-            return res.status(400).json({
-                error: 'title is required'
-            });
-        }
+    if (!title || !title.length) {
+      return res.status(400).json({
+        error: 'title is required'
+      });
+    }
 
-        if (!body || body.length < 200) {
-            return res.status(400).json({
-                error: 'Content is too short'
-            });
-        }
+    if (!body || body.length < 200) {
+      return res.status(400).json({
+        error: 'Content is too short'
+      });
+    }
 
-        if (!categories || categories.length === 0) {
-            return res.status(400).json({
-                error: 'At least one category is required'
-            });
-        }
+    if (!categories || categories.length === 0) {
+      return res.status(400).json({
+        error: 'At least one category is required'
+      });
+    }
 
-        if (!tags || tags.length === 0) {
-            return res.status(400).json({
-                error: 'At least one tag is required'
-            });
-        }
+    if (!tags || tags.length === 0) {
+      return res.status(400).json({
+        error: 'At least one tag is required'
+      });
+    }
 
 
     let blog = new Blog();
@@ -56,8 +56,9 @@ exports.create = (req, res) => {
     blog.mtitle = `${title} | ${process.env.APP_NAME}`;
     blog.mdesc = stripHtml(body.substring(0, 160));
     blog.postedBy = req.user._id;
-           let arrayOfCategories = categories && categories.split(",");
-           let arrayOfTags = tags && tags.split(",");
+
+    let arrayOfCategories = categories && categories.split(",");
+    let arrayOfTags = tags && tags.split(",");
 
     if (files.photo) {
       if (files.photo.size > 10000000) {
@@ -65,6 +66,7 @@ exports.create = (req, res) => {
           error: "Image should be less then 1mb in size",
         });
       }
+
       blog.photo.data = fs.readFileSync(files.photo.filepath);
       blog.photo.contentType = files.photo.mimetype;
     }
@@ -75,28 +77,44 @@ exports.create = (req, res) => {
           error: errorHandler(err),
         });
       }
-  // res.json(result);
-  Blog.findByIdAndUpdate(result._id, { $push: { categories: arrayOfCategories } }, { new: true }).exec(
-    (err, result) => {
-        if (err) {
+      // res.json(result);
+      Blog.findByIdAndUpdate(result._id, { $push: { categories: arrayOfCategories } }, { new: true }).exec(
+        (err, result) => {
+          if (err) {
             return res.status(400).json({
-                error: errorHandler(err)
+              error: errorHandler(err)
             });
-        } else {
+          } else {
             Blog.findByIdAndUpdate(result._id, { $push: { tags: arrayOfTags } }, { new: true }).exec(
-                (err, result) => {
-                    if (err) {
-                        return res.status(400).json({
-                            error: errorHandler(err)
-                        });
-                    } else {
-                        res.json(result);
-                    }
+              (err, result) => {
+                if (err) {
+                  return res.status(400).json({
+                    error: errorHandler(err)
+                  });
+                } else {
+                  res.json(result);
                 }
+              }
             );
+          }
         }
-    }
-);
-});
-});
+      );
+    });
+  });
+};
+
+exports.list = async(req, res) => {
+ const blog = await Blog.find({})
+      .populate('categories', '_id name slug')
+      .populate('tags', '_id name slug')
+      .populate('postedBy', '_id name username')
+      .select('_id title slug excerpt categories tags postedBy createdAt updatedAt')
+   if(!blog){
+    return res.status(400).json({
+      error: errorHandler(err)
+    });
+   }
+   else{
+    res.json(blog)
+   }
 };
