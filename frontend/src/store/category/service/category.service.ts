@@ -12,8 +12,9 @@ export class CategoryServices {
   private _put: PUT = container.resolve(PUT);
   private _delete: DELETE = container.resolve(DELETE);
 
-  getCategoryData() {
+  getCategoryData(param:any) {
     return this._get.setApi(API.categories)
+    .setParams(param)
       .requestPromise()
   }
   postCategoryData(data:any) {
