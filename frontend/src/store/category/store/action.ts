@@ -2,6 +2,7 @@ import { Dispatch } from "react";
 import { successToast } from "src/core/shared/toast/toast";
 import { IActionCreator } from "src/root store/types/store.types";
 import { container } from "tsyringe";
+import { CategoryModel } from "../models/category.model";
 import { CategoryServices } from "../service/category.service";
 import { CategoryActionTypes } from "./action-types";
 
@@ -30,12 +31,28 @@ export const getCategoryStart = (): any => (
     }
   )
   
-  export const getCategory = () => (
+  export const getCategory = (param:any) => (
     (dispatch: Dispatch<IActionCreator>) => {
       dispatch(getCategoryStart())
-      return service.getCategoryData().then(res => {
-        dispatch(getCategorySuccess(res.data.data))
-      }).catch(err => {
+      return service.getCategoryData(param).then(res => {
+        const items =  res.data.data.map((item:any)=>{
+        return new CategoryModel(item)
+        })
+        return {
+          items,
+          page:{
+            pageSize:res.data.page.pageSize,
+            pageIndex:res.data.page.pageIndex,
+            totalCount:res.data.page.totalCount,
+            next:res.data.page.next,
+            prev:res.data.page.previous,
+          }
+         }
+    })
+        .then((res:any) => {
+          dispatch(getCategorySuccess(res))
+      })
+      .catch(err => {
         dispatch(getCategoryFail(err))
       })
     }

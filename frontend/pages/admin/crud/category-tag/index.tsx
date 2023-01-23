@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import { deleteCategoryData, getCategory, postCategoryData } from 'store/category/store/action'
 import css from "./category-tag.module.scss"
 import {FiDelete} from "react-icons/fi"
+import ReactPaginate from 'react-paginate';
 
 const CategoryAndTagComponent = () => {
   const categoryList: any = useSelector((state: any) => state.category?.category);
@@ -13,24 +14,29 @@ const CategoryAndTagComponent = () => {
   const [inputValue,setInputValue] = useState({
     name:""
   })
+  const [pageParams,setPageParams] = useState({
+    pageNumber:1,
+    pageSize:1
+  })
+let paginate = categoryList?.page
 
+console.log(paginate)
   const {name} = inputValue
 
 useEffect(()=>{
-  dispatch(getCategory())
-},[])
+  dispatch(getCategory(pageParams))
+},[pageParams])
 
 const showCategories  = useCallback((category:any)=>{
   
 const handleDelete = async(slug:any) =>{
    await dispatch(deleteCategoryData(slug))
-   dispatch(getCategory())
+   dispatch(getCategory(pageParams))
 }
   return (
     <ul className={`row ${css.category_list}`}>
-      {
-        category.length>0 ? category?.map((cat:any,index:number)=>(
-          console.log(cat),
+      {category && 
+        category?.items?.length>0 ? category?.items?.map((cat:any,index:number)=>(
           <li key={index}>
             <div className={css.category_list_name}>
               <b> {cat?.name}</b>
@@ -53,7 +59,7 @@ const handleSubmit = async(e:any) =>{
   e.preventDefault()
   if(name !==""){
    await dispatch(postCategoryData(inputValue))
-   dispatch(getCategory())
+   dispatch(getCategory(pageParams))
   }
   setInputValue({
     name:""
@@ -76,7 +82,14 @@ const handleSubmit = async(e:any) =>{
     )
   }, [inputValue])
 
-  
+  const handlePageClick = (e:any) => {
+   const selectPage = e.selected+1
+   setPageParams({
+    pageNumber:selectPage,
+    pageSize:1
+   })
+  };
+
   return (
     <div className={css.category}>
      <div className="container-fluid">
@@ -86,6 +99,14 @@ const handleSubmit = async(e:any) =>{
       {showCategories(categoryList)}
       </div>
      </div>
+     <ReactPaginate
+        breakLabel="..."
+        nextLabel="next >"
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={3}
+        pageCount={3}
+        previousLabel="< previous"
+      />
     </div>
   )
 }

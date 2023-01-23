@@ -25,15 +25,14 @@ exports.categoryCreate = async (req, res, next) => {
 
 exports.categoryList = async (req, res, next) => {
     try {
-        let { page, size } = req.query
-        if (!page) page = 1;
-        if (!size) size = 10;
-        const limit = parseInt(size)
-        const skip = (page - 1) * size
+        let { pageNumber, pageSize } = req.query
+        if (!pageNumber) pageNumber = 1;
+        if (!pageSize) pageSize = 10;
+        const limit = parseInt(pageSize)
+        const skip = (pageNumber - 1) * pageSize
 
-        const category = await Categories.find({}).limit().skip(skip)
+        const category = await Categories.find({}).skip(skip).limit(limit)
         let totalPage = await Categories.countDocuments()
-        console.log(totalPage,"pagi")
         if (!category) {
             return next(new ErrorResponse("category is not found", 404));
         }
@@ -42,8 +41,8 @@ exports.categoryList = async (req, res, next) => {
             data: category,
             page:{
                 totalCount:totalPage,
-                pageIndex:page,
-                pageSize:size,
+                pageIndex:pageNumber,
+                pageSize:pageSize,
                 previous:false,
                 next:false
             }
