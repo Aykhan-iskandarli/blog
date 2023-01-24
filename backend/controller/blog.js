@@ -54,7 +54,7 @@ exports.create = (req, res) => {
     blog.excerpt = smartTrim(body, 30, ' ', ' ...');
     blog.slug = slugify(title).toLowerCase();
     blog.mtitle = `${title} | ${process.env.APP_NAME}`;
-    blog.mdesc = stripHtml(body.substring(0, 160));
+    blog.mdesc = stripHtml(body.substring(0, 20));
     blog.postedBy = req.user._id;
 
     let arrayOfCategories = categories && categories.split(",");
@@ -92,7 +92,7 @@ exports.create = (req, res) => {
                     error: errorHandler(err)
                   });
                 } else {
-                  res.json(result);
+                  res.status(201).json(result);
                 }
               }
             );

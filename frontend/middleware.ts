@@ -12,7 +12,7 @@ export function middleware(req:NextRequest){
     }
     else if(req.nextUrl.pathname.startsWith(`${origin}`)){
       if (!token) {
-        return NextResponse.redirect(`${origin}`)
+        return NextResponse.redirect(`${origin}/login`)
       }
       else{
         return NextResponse.next()

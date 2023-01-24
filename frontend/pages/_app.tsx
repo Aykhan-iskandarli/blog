@@ -20,6 +20,11 @@ export default function App({ Component, pageProps }: AppProps) {
   Router.events.on("routeChangeError", () => NProgress.done());
 
   const token = Cookies.get("token");
+  useEffect(()=>{
+    if(!token){
+      Router.push("/login")
+    }
+  },[token])
   return (
     <Provider store={store}>
       {

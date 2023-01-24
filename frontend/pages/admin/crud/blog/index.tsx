@@ -24,7 +24,6 @@ const BlogComponent = () => {
   const [checkedTag, setCheckedTag] = useState<any>([]); // tags
 
   const dispatch: any = useDispatch()
-console.log(checkedCat,"aa")
   const { title,photo } = inputForm
 
   useEffect(() => {

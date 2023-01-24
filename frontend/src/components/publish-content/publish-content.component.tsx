@@ -11,11 +11,11 @@ const PublishContentComponent = ({children}:any) => {
     const dispatch: any = useDispatch();
     token && dispatch(setUserData(token));
 
-    // useEffect(()=>{
-    //     if (!token) {
-    //         Router.push("/");
-    //       }
-    // },[token])
+    useEffect(()=>{
+        if (!token) {
+            Router.push("/");
+          }
+    },[token])
   return (
     <div>
     {loading && <LoadingComponent />}
