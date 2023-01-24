@@ -6,31 +6,17 @@ import { API } from 'src/core/layouts/public/configs/api.config';
 import { DELETE } from 'packages/VHttp/DELETE';
 
 @injectable()
-export class CategoryServices {
+export class BlogServices {
   private _get: GET = container.resolve(GET);
   private _post: POST = container.resolve(POST);
   private _put: PUT = container.resolve(PUT);
   private _delete: DELETE = container.resolve(DELETE);
 
-  getCategoryData(param:any) {
-    return this._get.setApi(API.categories)
-    .setParams(param)
-      .requestPromise()
-  }
-  postCategoryData(data:any) {
-    return this._post.setApi(API.category)
+  postBlogData(data:any) {
+    return this._post.setApi(API.blogs)
       .setPayload(data)
       .requestPromise()
   }
 
-  deleteCategoryDatas(id:string) {
-    return this._delete.setApi(API.category + "/" + id)
-      .requestPromise()
-  }
-
-
-  getTagData() {
-    return this._get.setApi(API.tags)
-      .requestPromise()
-  }
+ 
 }

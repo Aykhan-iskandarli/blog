@@ -3,3 +3,9 @@ export enum CategoryActionTypes {
     GET_CATEGORY_FAIL = 'GET_CATEGORY_FAIL',
     GET_CATEGORY_START = 'GET_CATEGORY_START',
 }
+
+export enum TagActionTypes {
+    GET_TAG_SUCCESS = 'GET_TAG_SUCCESS',
+    GET_TAG_FAIL = 'GET_TAG_FAIL',
+    GET_TAG_START = 'GET_TAG_START',
+}

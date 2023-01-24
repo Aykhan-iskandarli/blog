@@ -11,4 +11,7 @@ export const API = {
 
   category: environment + base + "category",
   categories: environment + base + "categories",
+
+  tags: environment + base + "tags",
+  blogs: environment + base + "blog",
 };

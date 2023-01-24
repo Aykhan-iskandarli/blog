@@ -1,6 +1,6 @@
 import { ICategoryAndTag } from "../types/category-types";
 
-export class CategoryModel {
+export class TagModel {
   public name: string | undefined;
   public id: number | string | undefined;
   public createdAt: number | string | undefined;

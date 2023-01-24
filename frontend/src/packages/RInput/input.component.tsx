@@ -20,6 +20,7 @@ const InputComponent = (props: InputProps) => {
         onMouseEnter={props.show}
         onKeyDown={props.onKeyDown}
         maxLength={props.maxLength}
+        accept={props.accept}
       />
       {props.children}
       {props.error && <div className="error-text">{props.error}</div>}

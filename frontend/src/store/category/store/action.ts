@@ -3,8 +3,9 @@ import { successToast } from "src/core/shared/toast/toast";
 import { IActionCreator } from "src/root store/types/store.types";
 import { container } from "tsyringe";
 import { CategoryModel } from "../models/category.model";
+import { TagModel } from "../models/tag.model";
 import { CategoryServices } from "../service/category.service";
-import { CategoryActionTypes } from "./action-types";
+import { CategoryActionTypes, TagActionTypes } from "./action-types";
 
 
 
@@ -83,4 +84,44 @@ export const getCategoryStart = (): any => (
         })
     }
   )
+
+  export const getTagStart = (): any => (
+    {
+      type: TagActionTypes.GET_TAG_START
+    }
+  )
+  
+  export const getTagFail = (err: any): any => (
+    {
+      type: TagActionTypes.GET_TAG_FAIL,
+      payload: err
+    }
+  )
+  
+  export const getTagSuccess = (data: any): any => (
+    {
+      type: TagActionTypes.GET_TAG_SUCCESS,
+      payload: data
+    }
+  )
+
+
+  export const getTag = () => (
+    (dispatch: Dispatch<IActionCreator>) => {
+      dispatch(getTagStart())
+      return service.getTagData().then(res => {
+       return res.data.data.map((item:any)=>{
+        return new TagModel(item)
+        })
+    })
+        .then((res:any) => {
+          dispatch(getTagSuccess(res))
+      })
+      .catch(err => {
+        dispatch(getTagFail(err))
+      })
+    }
+  )
+
+  
   

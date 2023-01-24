@@ -1,12 +1,13 @@
-import { CategoryReducerState } from "../types/category-types"
-import { CategoryActionTypes } from "./action-types"
+import { CategoryAndTagReducerState } from "../types/category-types"
+import { CategoryActionTypes, TagActionTypes } from "./action-types"
 
-const initialState: CategoryReducerState = {
+const initialState: CategoryAndTagReducerState = {
     category: [],
+    tags: [],
     error: []
 }
 
-export const CategoryReducer = (state = initialState, action: any) => {
+export const CategoryAndTagsReducerState = (state = initialState, action: any) => {
     switch (action.type) {
         case CategoryActionTypes.GET_CATEGORY_START:
             return {
@@ -18,6 +19,20 @@ export const CategoryReducer = (state = initialState, action: any) => {
                 category: action.payload
             }
         case CategoryActionTypes.GET_CATEGORY_FAIL:
+            return {
+                ...state,
+                error: action.payload
+            }
+        case TagActionTypes.GET_TAG_START:
+            return {
+                ...state,
+            }
+        case TagActionTypes.GET_TAG_SUCCESS:
+            return {
+                ...state,
+                tags: action.payload
+            }
+        case TagActionTypes.GET_TAG_FAIL:
             return {
                 ...state,
                 error: action.payload

@@ -9,7 +9,7 @@ export interface InputProps {
   error?: string;
   placeholder?: string;
   size?: string;
-  type?: "text" | "email" | "password";
+  type?: "text" | "email" | "password" | "checkbox" | "file";
   className?: string;
   disabled?: boolean;
   children?: React.ReactNode,
@@ -17,5 +17,6 @@ export interface InputProps {
   show?: function,
   close?: function,
   onKeyDown?:function,
-  maxLength?:number
+  maxLength?:number,
+  accept?:any
 }

@@ -1,1 +1,22 @@
 @import "../../../../src/assets/styles/abstracts/";
+
+.blog_form{
+    &_btn{
+        button{
+            width: 100% ;
+        }
+    }
+    &_list{
+        &_inputs{
+            display: flex;
+            &_input{
+                width: 100%;
+            
+            }
+            input{
+                border: 1px solid red !important;
+            }
+        }
+    }
+  
+}

@@ -24,13 +24,13 @@ exports.TagCreate = async (req,res,next) =>{
 
 exports.TagList = async (req,res,next) =>{
     try {
-        const Tags = await  Tags.find({})
-        if(!Tags){
+        const Tag = await Tags.find({})
+        if(!Tag){
             return next(new ErrorResponse("Tags is not found", 404));
         }
         res.status(200).json({
             success:true,
-            data:Tags
+            data:Tag
         })
     } catch (error) {
         next(error)

@@ -1,12 +1,13 @@
-export interface ICategory {
+export interface ICategoryAndTag {
     name: string,
-    id: number | string
+    _id: number | string | undefined
     slug:string | undefined,
     createdAt:string | undefined,
     updatedAt:string | undefined,
 }
 
-export interface CategoryReducerState{
+export interface CategoryAndTagReducerState{
     category:[],
-    error:[]
+    error:[],
+    tags:[]
 }
