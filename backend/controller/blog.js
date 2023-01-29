@@ -103,18 +103,174 @@ exports.create = (req, res) => {
   });
 };
 
-exports.list = async(req, res) => {
- const blog = await Blog.find({})
-      .populate('categories', '_id name slug')
-      .populate('tags', '_id name slug')
-      .populate('postedBy', '_id name username')
-      .select('_id title slug excerpt categories tags postedBy createdAt updatedAt')
-   if(!blog){
+
+exports.ListAllBlogCategories = async (req, res) => {
+  let { pageNumber, pageSize } = req.query
+  if (!pageNumber) pageNumber = 1;
+  if (!pageSize) pageSize = 10;
+  const limit = parseInt(pageSize)
+  const skip = (pageNumber - 1) * pageSize
+  try {
+    let totalPage = await Blog.countDocuments()
+    const blog = await Blog.find({}).skip(skip).limit(limit)
+    .populate('categories', '_id name slug')
+    .populate('tags', '_id name slug')
+    .populate('postedBy', '_id name username')
+    .select('_id title body slug excerpt categories tags postedBy createdAt updatedAt')
+
+
+    if (!blog) {
+      return res.status(400).json({
+        error: errorHandler(err)
+      });
+    }
+    else {
+      res.status(200).json({
+        success: true,
+        data: blog,
+        page: {
+          totalCount: totalPage,
+          pageIndex: pageNumber,
+          pageSize: pageSize,
+          previous: false,
+          next: false
+        }
+      })
+    }
+  } catch (err) {
     return res.status(400).json({
       error: errorHandler(err)
     });
-   }
-   else{
-    res.json(blog)
-   }
+  }
 };
+
+
+exports.list = async (req, res) => {
+  try {
+    const blog = await Blog.find({})
+      .populate('categories', '_id name slug')
+      .populate('tags', '_id name slug')
+      .populate('postedBy', '_id name username')
+      .select('_id title body slug excerpt categories tags postedBy createdAt updatedAt')
+    if (!blog) {
+      return res.status(400).json({
+        error: errorHandler(err)
+      });
+    }
+    else {
+      res.status(200).json({
+        success: true,
+        data: blog,
+      })
+    }
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler(err)
+    });
+  }
+};
+
+
+
+exports.update = (req, res) => {
+  const slug = req.params.toLowerCase()
+
+  Blog.findOne({slug}).exec((err,oldBlog)=>{
+    if (err) {
+      return res.status(400).json({
+        error: errorHandler(err),
+      });
+    }
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.parse(req, (err, fields, files) => {
+      if (err) {
+        return res.status(400).json({
+          error: "Image could not upload",
+        });
+     
+      }
+      let slugBeforeMerge = oldBlog.slug
+      oldBlog = _merge(oldBlog,fields)
+      oldBlog.slug = slugBeforeMerge
+  
+      const { desc, body, categories, tags } = fields;
+  
+  
+      if (body) {
+        oldBlog.excerpt = smartTrim(body, 30, ' ', ' ...');
+        oldBlog.mdesc = stripHtml(body.substring(0, 20));
+    
+      }
+  
+      if (categories) {
+        oldBlog.categories = categories.split(',');
+    
+      }
+  
+      if (tags) {
+        oldBlog.tags = tags.split(",");
+    
+      }
+  
+      if (files.photo) {
+        if (files.photo.size > 10000000) {
+          return res.status(400).json({
+            error: "Image should be less then 1mb in size",
+          });
+        }
+  
+        oldBlog.photo.data = fs.readFileSync(files.photo.filepath);
+        oldBlog.photo.contentType = files.photo.mimetype;
+      }
+  
+      oldBlog.save((err, result) => {
+        if (err) {
+          return res.status(400).json({
+            error: errorHandler(err),
+          });
+        }
+         res.json(result);
+      });
+    });
+  })
+
+};
+
+
+exports.read = async(req, res) => {
+  const slug = req.params.toLowerCase()
+
+  const blog = await Blog.find({})
+  .populate('categories', '_id name slug')
+  .populate('tags', '_id name slug')
+  .populate('postedBy', '_id name username')
+  .select('_id title mtitle body slug mdesc excerpt categories tags postedBy createdAt updatedAt')
+  .exec((err,data)=>{
+    if(err){
+      return res.status(400).json({
+        error: errorHandler(err),
+      });
+    }
+    res.status(200).json(data)
+  })
+
+}
+
+
+exports.remove = async(req, res) => {
+  const slug = req.params.toLowerCase()
+
+  const blog = await Blog.findByIdAndRemove({}).exec((err,data)=>{
+    if(err){
+      return res.status(400).json({
+        error: errorHandler(err),
+      });
+    }
+    res.json({
+      message:"Blog deleted successfully"
+    })
+  })
+
+}
+

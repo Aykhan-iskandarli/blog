@@ -34,9 +34,6 @@ const BlogComponent = () => {
     dispatch(getTag())
   }, [])
 
-  const { quill, quillRef, Quill } = useQuill({
-    modules: { blotFormatter: {}, }
-  });
 
   const handleToggle = (e: any, id: any) => {
     const clickedCategory = checkedCat.indexOf(id);
