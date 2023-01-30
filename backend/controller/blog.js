@@ -29,7 +29,7 @@ exports.create = (req, res) => {
       });
     }
 
-    if (!body || body.length < 200) {
+    if (!body || body.length < 100) {
       return res.status(400).json({
         error: 'Content is too short'
       });
@@ -113,11 +113,10 @@ exports.ListAllBlogCategories = async (req, res) => {
   try {
     let totalPage = await Blog.countDocuments()
     const blog = await Blog.find({}).skip(skip).limit(limit)
-    .populate('categories', '_id name slug')
-    .populate('tags', '_id name slug')
-    .populate('postedBy', '_id name username')
-    .select('_id title body slug excerpt categories tags postedBy createdAt updatedAt')
-
+      .populate('categories', '_id name slug')
+      .populate('tags', '_id name slug')
+      .populate('postedBy', '_id name username')
+      .select('_id title body slug excerpt categories tags postedBy createdAt updatedAt')
 
     if (!blog) {
       return res.status(400).json({
@@ -127,7 +126,7 @@ exports.ListAllBlogCategories = async (req, res) => {
     else {
       res.status(200).json({
         success: true,
-        data: blog,
+        blog,
         page: {
           totalCount: totalPage,
           pageIndex: pageNumber,
@@ -175,7 +174,7 @@ exports.list = async (req, res) => {
 exports.update = (req, res) => {
   const slug = req.params.toLowerCase()
 
-  Blog.findOne({slug}).exec((err,oldBlog)=>{
+  Blog.findOne({ slug }).exec((err, oldBlog) => {
     if (err) {
       return res.status(400).json({
         error: errorHandler(err),
@@ -188,49 +187,49 @@ exports.update = (req, res) => {
         return res.status(400).json({
           error: "Image could not upload",
         });
-     
+
       }
       let slugBeforeMerge = oldBlog.slug
-      oldBlog = _merge(oldBlog,fields)
+      oldBlog = _merge(oldBlog, fields)
       oldBlog.slug = slugBeforeMerge
-  
+
       const { desc, body, categories, tags } = fields;
-  
-  
+
+
       if (body) {
         oldBlog.excerpt = smartTrim(body, 30, ' ', ' ...');
         oldBlog.mdesc = stripHtml(body.substring(0, 20));
-    
+
       }
-  
+
       if (categories) {
         oldBlog.categories = categories.split(',');
-    
+
       }
-  
+
       if (tags) {
         oldBlog.tags = tags.split(",");
-    
+
       }
-  
+
       if (files.photo) {
         if (files.photo.size > 10000000) {
           return res.status(400).json({
             error: "Image should be less then 1mb in size",
           });
         }
-  
+
         oldBlog.photo.data = fs.readFileSync(files.photo.filepath);
         oldBlog.photo.contentType = files.photo.mimetype;
       }
-  
+
       oldBlog.save((err, result) => {
         if (err) {
           return res.status(400).json({
             error: errorHandler(err),
           });
         }
-         res.json(result);
+        res.json(result);
       });
     });
   })
@@ -238,39 +237,56 @@ exports.update = (req, res) => {
 };
 
 
-exports.read = async(req, res) => {
-  const slug = req.params.toLowerCase()
+exports.read = async (req, res) => {
+  const slug = req.params.slug.toLowerCase()
 
-  const blog = await Blog.find({})
-  .populate('categories', '_id name slug')
-  .populate('tags', '_id name slug')
-  .populate('postedBy', '_id name username')
-  .select('_id title mtitle body slug mdesc excerpt categories tags postedBy createdAt updatedAt')
-  .exec((err,data)=>{
-    if(err){
-      return res.status(400).json({
-        error: errorHandler(err),
-      });
-    }
-    res.status(200).json(data)
-  })
+  await Blog.find({ slug })
+    .populate('categories', '_id name slug')
+    .populate('tags', '_id name slug')
+    .populate('postedBy', '_id name username')
+    .select('_id title mtitle body slug mdesc excerpt categories tags postedBy createdAt updatedAt')
+    .exec((err, data) => {
+      if (err) {
+        return res.status(400).json({
+          error: errorHandler(err),
+        });
+      }
+      res.status(200).json(data)
+    })
 
 }
 
 
-exports.remove = async(req, res) => {
-  const slug = req.params.toLowerCase()
+exports.removeBlog = async (req, res) => {
+  const slug = req.params.slug.toLowerCase()
 
-  const blog = await Blog.findByIdAndRemove({}).exec((err,data)=>{
-    if(err){
+  await Blog.findOneAndRemove({ slug }).exec((err, data) => {
+    if (err) {
+      console.log(err,"err")
       return res.status(400).json({
         error: errorHandler(err),
       });
     }
     res.json({
-      message:"Blog deleted successfully"
+      message: "Blog deleted successfully"
     })
   })
 
 }
 
+
+
+exports.photo = (req, res) => {
+  const slug = req.params.slug.toLowerCase();
+  Blog.findOne({ slug })
+      .select('photo')
+      .exec((err, blog) => {
+          if (err || !blog) {
+              return res.status(400).json({
+                  error: errorHandler(err)
+              });
+          }
+          res.set('Content-Type', blog.photo.contentType);
+          return res.send(blog.photo.data);
+      });
+};

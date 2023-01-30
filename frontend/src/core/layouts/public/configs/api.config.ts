@@ -14,4 +14,6 @@ export const API = {
 
   tags: environment + base + "tags",
   blogs: environment + base + "blog",
+  allblogs: environment + base + "allBlogCategoriesAndTags",
+  blogPhoto: environment + base + "/blog/photo",
 };

@@ -26,12 +26,14 @@ const PrivateComponent = ({ children }: any) => {
       "/admin",
       "/",
       "/admin/crud/category-tag",
-      "/admin/crud/blog"
+      "/admin/crud/blog",
+      "/get-blog",
     ],
     user:[
       "/user",
       "/",
       "/user/blog",
+      "/get-blog",
     ]
   }
   console.log(pathname,"path")

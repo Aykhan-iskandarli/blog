@@ -5,7 +5,9 @@ export interface IBlog {
     categories: ICatAndTag[]
     slug:string | undefined,
     postedBy:object | undefined | null ,
+    createdAt:string | undefined,
     updatedAt:string | undefined,
+    body:string | undefined,
 }
 
 export interface ICatAndTag {

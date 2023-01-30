@@ -13,7 +13,16 @@ export const BlogReducerState = (state = initialState, action: any) => {
             return {
                 ...state,
             }
-
+        case BlogActionTypes.GET_BLOG_SUCCESS:
+            return {
+                ...state,
+                blog: action.payload
+            }
+        case BlogActionTypes.GET_BLOG_FAIL:
+            return {
+                ...state,
+                error: action.payload
+            }
         default:
             return state;
     }

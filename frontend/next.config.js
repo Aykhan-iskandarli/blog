@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output:'standalone',
-  reactStrictMode: true,
+  reactStrictMode: false,
   swcMinify: true,
   env: {
     PUBLIC_URL: process.env.PUBLIC_URL,

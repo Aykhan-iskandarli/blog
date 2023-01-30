@@ -18,5 +18,14 @@ export class BlogServices {
       .requestPromise()
   }
 
- 
+  getBlogData(params:any) {
+    return this._get.setApi(API.allblogs)
+    .setParams(params)
+      .requestPromise()
+  }
+
+  getBlogPhoto(slug:any) {
+    return this._get.setApi(API.blogPhoto + `/${slug}`)
+    .requestPromise()
+  }
 }
