@@ -13,7 +13,7 @@ const PublishContentComponent = ({children}:any) => {
 
     useEffect(()=>{
         if (!token) {
-            Router.push("/");
+            Router.push("/login");
           }
     },[token])
   return (

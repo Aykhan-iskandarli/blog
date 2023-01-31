@@ -112,7 +112,7 @@ exports.ListAllBlogCategories = async (req, res) => {
   const skip = (pageNumber - 1) * pageSize
   try {
     let totalPage = await Blog.countDocuments()
-    const blog = await Blog.find({}).skip(skip).limit(limit)
+    const blog = await Blog.find({}).skip(skip).limit(limit).sort({ createdAt: -1 })
       .populate('categories', '_id name slug')
       .populate('tags', '_id name slug')
       .populate('postedBy', '_id name username')

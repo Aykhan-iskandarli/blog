@@ -8,7 +8,7 @@ blog.route("/blog").post(protect,create);
 blog.route("/blogs").get(protect,list);
 blog.route("/blogs/:slug").delete(protect,removeBlog);
 blog.route("/blog-detail/:slug").get(protect,read);
-blog.route('/blog/photo/:slug').get(protect, photo);
+blog.route('/blog/photo/:slug').get( photo);
 blog.route("/allBlogCategoriesAndTags").get(protect,ListAllBlogCategories);
 
 module.exports = blog

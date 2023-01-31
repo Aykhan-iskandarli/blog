@@ -6,7 +6,7 @@ import { injectable } from 'tsyringe';
 import { RequestInterceptor } from '../../../../packages/VHttp/interceptors/request.interceptor';
 import { ResponseInterceptor } from '../../../../packages/VHttp/interceptors/response.interceptor';
 import { GetLang } from '../helpers/common-functions/common-functions';
-import { toggleLoading } from '../store/actions';
+import { removeCookie, toggleLoading } from '../store/actions';
 
 @injectable()
 export class ApiInterceptor extends RequestInterceptor {
@@ -44,10 +44,10 @@ export class ApiInterceptorResponse extends ResponseInterceptor {
                 switch (error.response.status) {
                     case 401:
                         Router.push('/login')
-                        localStorage.removeItem('token');
+                        removeCookie("token");
                         break;
                     case 404:
-                        // Router.push('/error/not-found')
+                        Router.push('/error/not-found')
                         break;
                     case 500:
                         break;

@@ -36,7 +36,6 @@ const PrivateComponent = ({ children }: any) => {
       "/get-blog",
     ]
   }
-  console.log(pathname,"path")
   useEffect(()=>{
     token && dispatch(setUserData(token))
   },[dispatch])
@@ -48,7 +47,6 @@ const PrivateComponent = ({ children }: any) => {
       switch (user.role) {
         case 1:
           if (!AccessUrl.admin.includes(pathname)) {
-            console.log("aaa")
             Router.push("/admin");
           } else {
             setShowContent(true);
@@ -56,7 +54,6 @@ const PrivateComponent = ({ children }: any) => {
           break;
         case 0:
           if (!AccessUrl.user.includes(pathname)) {
-            console.log("aaa")
             Router.push("/user");
           } else {
             setShowContent(true);

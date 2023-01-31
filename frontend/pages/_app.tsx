@@ -14,6 +14,7 @@ import Cookies from "js-cookie";
 import PublishContentComponent from "components/publish-content/publish-content.component";
 import '../src/core/shared/toast/toast.scss'
 import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from "react-toastify";
 export default function App({ Component, pageProps }: AppProps) {
   Router.events.on("routeChangeStart", () => NProgress.start());
   Router.events.on("routeChangeComplete", () => NProgress.done());
@@ -40,6 +41,18 @@ export default function App({ Component, pageProps }: AppProps) {
             </LayoutComponent>
           </PublishContentComponent>
       }
+        <ToastContainer
+        position='bottom-left'
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='light'
+      />
     </Provider>
   );
 }

@@ -1,3 +1,4 @@
+import Router from "next/router";
 import { Dispatch } from "react";
 import { successToast } from "src/core/shared/toast/toast";
 import { IActionCreator } from "src/root store/types/store.types";
@@ -38,7 +39,7 @@ export const getBlogStart = (): any => (
       return service.postBlogData(data)
         .then((res) => {
           successToast('Uğurla yaradildi');
-          console.log("yaradildi")
+          Router.push("/get-blog");
           return Promise.resolve(res.data);
         }).catch(err => {
           return Promise.reject(err);

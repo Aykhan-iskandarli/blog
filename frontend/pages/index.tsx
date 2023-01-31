@@ -6,9 +6,7 @@ import { getCategory } from 'store/category/store/action'
 
 export default function Home() {
   const dispatch:any = useDispatch()
-  useEffect(()=>{
-    dispatch(getCategory())
-  },[])
+
   return (
     <div>
     saam
