@@ -30,7 +30,6 @@ const BlogComponent = () => {
       pageSize: 1
     })
   };
-console.log(blog,"blog")
 
   return (
     <div className={css.blog_section}>
@@ -62,7 +61,7 @@ console.log(blog,"blog")
                       <div className={css.blog_container_card_content_tags_tag}>
                         {
                           item?.tags.map((tag: any) => (
-                            <span>{tag.tagName}</span>
+                            <span key={generateGuid()}>{tag.tagName}</span>
                           ))
                         }
                       </div>
@@ -72,7 +71,7 @@ console.log(blog,"blog")
                    <div className={css.blog_container_card_content_cats_cat}>
                    {
                         item?.categories?.map((cat:any)=>(
-                          <span>{cat.categoriesName}</span>
+                          <span key={generateGuid()}>{cat.categoriesName}</span>
                         ))
                       }
                    </div>

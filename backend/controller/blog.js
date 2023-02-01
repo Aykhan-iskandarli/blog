@@ -240,7 +240,7 @@ exports.update = (req, res) => {
 exports.read = async (req, res) => {
   const slug = req.params.slug.toLowerCase()
 
-  await Blog.find({ slug })
+  await Blog.find( {slug} )
     .populate('categories', '_id name slug')
     .populate('tags', '_id name slug')
     .populate('postedBy', '_id name username')
@@ -251,7 +251,7 @@ exports.read = async (req, res) => {
           error: errorHandler(err),
         });
       }
-      res.status(200).json(data)
+      res.status(200).json({...data})
     })
 
 }

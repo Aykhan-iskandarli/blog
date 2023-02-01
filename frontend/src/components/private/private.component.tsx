@@ -28,6 +28,7 @@ const PrivateComponent = ({ children }: any) => {
       "/admin/crud/category-tag",
       "/admin/crud/blog",
       "/get-blog",
+      "/get-blog/[slug]",
     ],
     user:[
       "/user",
@@ -46,6 +47,7 @@ const PrivateComponent = ({ children }: any) => {
     } else {
       switch (user.role) {
         case 1:
+          console.log(pathname,"path")
           if (!AccessUrl.admin.includes(pathname)) {
             Router.push("/admin");
           } else {

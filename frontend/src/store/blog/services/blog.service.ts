@@ -28,4 +28,9 @@ export class BlogServices {
     return this._get.setApi(API.blogPhoto + `/${slug}`)
     .requestPromise()
   }
+
+  getBlogDetail(slug:any) {
+    return this._get.setApi(API.blogDetail + `/${slug}`)
+    .requestPromise()
+  }
 }
