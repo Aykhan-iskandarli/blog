@@ -34,7 +34,6 @@ const PrivateComponent = ({ children }: any) => {
       "/user",
       "/",
       "/user/blog",
-      "/get-blog",
     ]
   }
   useEffect(()=>{

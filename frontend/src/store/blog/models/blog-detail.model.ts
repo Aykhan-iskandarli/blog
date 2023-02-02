@@ -7,6 +7,8 @@ export class BlogDetailModel {
   public categories: string | undefined | null=null;
   public tags: string | undefined;
   public slug: string | undefined;
+  public mtitle?: string | undefined;
+  public mdesc?: string | undefined;
   public createdAt: string | undefined;
   public updatedAt: string | undefined;
   public postedBy: object | undefined | null=null;
@@ -16,6 +18,8 @@ export class BlogDetailModel {
     this._setName(item);
     this._setBody(item)
     this._setSlug(item);
+    this._setMtitle(item);
+    this._setDesc(item);
     this._setCategories(item);
     this._setTags(item);
     this._setPostedBy(item);
@@ -94,6 +98,28 @@ export class BlogDetailModel {
   private _setName({ title }: IBlog) {
     this.title = title;
   }
+
+  
+  /**
+   * set mtitle
+   * @param mtitle
+   * @private
+   */
+
+  private _setMtitle({ mtitle }: IBlog) {
+    this.mtitle = mtitle;
+  }
+
+    /**
+   * set mdesc
+   * @param mdesc
+   * @private
+   */
+
+    private _setDesc({ mdesc }: IBlog) {
+      this.mdesc = mdesc;
+    }
+
 
 /**
    * set body

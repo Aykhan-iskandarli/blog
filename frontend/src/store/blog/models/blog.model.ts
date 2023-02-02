@@ -9,6 +9,7 @@ export class BlogModel {
   public slug: string | undefined;
   public createdAt: string | undefined;
   public updatedAt: string | undefined;
+  public excerpt: string | undefined;
   public postedBy: object | undefined | null=null;
 
   constructor(item: IBlog) {
@@ -16,6 +17,7 @@ export class BlogModel {
     this._setName(item);
     this._setBody(item)
     this._setSlug(item);
+    this._setExcerpt(item);
     this._setCategories(item);
     this._setTags(item);
     this._setPostedBy(item);
@@ -41,6 +43,17 @@ export class BlogModel {
 
   private _setSlug({ slug }: IBlog) {
     this.slug = slug;
+  }
+
+  
+  /**
+   * set excerpt
+   * @param excerpt
+   * @private
+   */
+
+  private _setExcerpt({ excerpt }: IBlog) {
+    this.excerpt = excerpt;
   }
 
 

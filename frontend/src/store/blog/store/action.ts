@@ -62,6 +62,7 @@ export const getBlogStart = (): any => (
               pageSize:res.data.page.pageSize,
               pageIndex:res.data.page.pageIndex,
               totalCount:res.data.page.totalCount,
+              totalPages:res.data.page.totalPages,
               next:res.data.page.next,
               prev:res.data.page.previous,
             },

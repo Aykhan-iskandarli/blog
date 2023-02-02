@@ -51,10 +51,10 @@ exports.create = (req, res) => {
     let blog = new Blog();
     blog.title = title;
     blog.body = body;
-    blog.excerpt = smartTrim(body, 30, ' ', ' ...');
+    blog.excerpt = smartTrim(body, 600, ' ', ' ...');
     blog.slug = slugify(title).toLowerCase();
     blog.mtitle = `${title} | ${process.env.APP_NAME}`;
-    blog.mdesc = stripHtml(body.substring(0, 20));
+    blog.mdesc = stripHtml(body.substring(0, 160));
     blog.postedBy = req.user._id;
 
     let arrayOfCategories = categories && categories.split(",");
@@ -106,6 +106,7 @@ exports.create = (req, res) => {
 
 exports.ListAllBlogCategories = async (req, res) => {
   let { pageNumber, pageSize } = req.query
+  console.log(pageNumber,pageSize)
   if (!pageNumber) pageNumber = 1;
   if (!pageSize) pageSize = 10;
   const limit = parseInt(pageSize)
@@ -116,7 +117,7 @@ exports.ListAllBlogCategories = async (req, res) => {
       .populate('categories', '_id name slug')
       .populate('tags', '_id name slug')
       .populate('postedBy', '_id name username')
-      .select('_id title body slug excerpt categories tags postedBy createdAt updatedAt')
+      .select('_id title body mtitle mdesc slug excerpt categories tags postedBy createdAt updatedAt')
 
     if (!blog) {
       return res.status(400).json({
@@ -124,17 +125,25 @@ exports.ListAllBlogCategories = async (req, res) => {
       });
     }
     else {
-      res.status(200).json({
-        success: true,
-        blog,
-        page: {
-          totalCount: totalPage,
-          pageIndex: pageNumber,
-          pageSize: pageSize,
-          previous: false,
-          next: false
-        }
-      })
+      if(pageNumber > Math.ceil(totalPage / limit)){
+        return res.status(400).json({
+          error: errorHandler("invalid error")
+        });
+      }
+      else{
+        res.status(200).json({
+          success: true,
+          blog,
+          page: {
+            totalCount: (+totalPage),
+            pageIndex: (+pageNumber),
+            pageSize: (+pageSize),
+            totalPages:Math.ceil(totalPage / limit),
+            previous: false,
+            next: false
+          }
+        })
+      }
     }
   } catch (err) {
     return res.status(400).json({

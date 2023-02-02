@@ -8,6 +8,9 @@ export interface IBlog {
     createdAt:string | undefined,
     updatedAt:string | undefined,
     body:string | undefined,
+    excerpt:string | undefined,
+    mtitle?:string | undefined
+    mdesc?:string | undefined
 }
 
 export interface ICatAndTag {
@@ -26,5 +29,6 @@ export interface CategoryAndTagReducerState{
 
 export interface IBlogReducerState{
     blog:[],
+    blogDetail:[]
     error:[],
 }
