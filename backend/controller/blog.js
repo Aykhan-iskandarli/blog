@@ -116,14 +116,15 @@ exports.ListAllBlogCategories = async (req, res) => {
   const { search } = req.query;
   
   try {
-    const blog = await Blog.find({
-      $or: [{ title: { $regex: search || "", $options: 'i' } }]
-    }).skip(skip).limit(limit).sort({ createdAt: -1 })
+    const blog = await Blog.find({$or: [{ title: { $regex: search || "", $options: 'i' } }]})
+    .skip(skip)
+    .limit(limit)
+    .sort({ createdAt: -1 })
       .populate('categories', '_id name slug')
       .populate('tags', '_id name slug')
       .populate('postedBy', '_id name username')
       .select('_id title body mtitle mdesc slug excerpt categories tags postedBy createdAt updatedAt')
-      let totalPage = await Blog.countDocuments()
+      let totalPage = await Blog.countDocuments({$or: [{ title: { $regex: search || "", $options: 'i' } }]})
 
     if (!blog) {
       return res.status(400).json({

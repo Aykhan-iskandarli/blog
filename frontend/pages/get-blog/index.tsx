@@ -7,7 +7,7 @@ import css from "./blog.module.scss"
 import moment from "moment"
 import Image from 'next/image'
 import { API } from 'src/core/layouts/public/configs/api.config'
-import { generateGuid } from 'src/core/layouts/public/helpers/common-functions/common-functions'
+import { debounce, generateGuid } from 'src/core/layouts/public/helpers/common-functions/common-functions'
 import {BsChevronLeft, BsChevronRight,} from "react-icons/bs"
 import ButtonComponent from 'packages/RButton/button.component'
 import  Router  from 'next/router'
@@ -21,28 +21,28 @@ const BlogComponent = () => {
     pageNumber: 1,
     pageSize: 3
   })
-  const [searchValue,setSearchValue] = useState<any>({
-    search:""
+  const [search,setSearch] = useState<any>()
+
+
+
+const handleChange = debounce((e: any) => { 
+  setSearch(e.target.value.toLocaleLowerCase('en-En'))
+  setPageParams({
+    pageNumber:1,
+    pageSize:3
   })
-const {search} = searchValue
-
-const handleChange = (e:any) =>{
-  const {name,value} = e.target
-  setSearchValue({...searchValue, [name]:value})
-
-}
+},500);
   let paginate = blog?.page
 
-  const debounceSearch = useDebounce(search,500)
 
   useEffect(() => {
     let param = {
       pageNumber:pageParams.pageNumber,
       pageSize:pageParams.pageSize,
-      search:debounceSearch
+      search
     }
     dispatch(getBlogData(param))
-  }, [dispatch,pageParams,debounceSearch])
+  }, [dispatch,pageParams,search])
 
   const handlePageClick = (e: any) => {
     const selectPage = e.selected + 1
@@ -58,7 +58,9 @@ const handleChange = (e:any) =>{
     Router.push(`http://localhost:8080/get-blog/${slug}`)
   }
 
-
+useEffect(()=>{
+  blog && blog?.items
+},[])
 
 
   return (

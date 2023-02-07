@@ -4,7 +4,6 @@
  
     &_card{
         background-color: $white;
-      
         &_img{
             width: 100%;
             height: rem(500);
@@ -13,5 +12,9 @@
         &_content{
             padding: rem(20);
         }
+    }
+    &_skeleton_container{
+        width: 100% ;
+        background-color: $white ;
     }
 }

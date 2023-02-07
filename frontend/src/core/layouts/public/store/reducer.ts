@@ -16,11 +16,6 @@ const initialState: IPublicReduxState = {
 
 export const publicReducer = (state = initialState, action: IActionCreator) => {
   switch (action.type) {
-    case publicConstants.LOADING:
-      return {
-        ...state,
-        loading: action.payload,
-      };
       case toggleLoadingActions.TOGGLE_LOADING:
         return {
           ...state,

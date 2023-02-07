@@ -14,7 +14,7 @@ const InputComponent = (props: InputProps) => {
         type={props.type}
         className={`${css.form_control} ${props.className}`}
         name={props.name}
-        value={props.value}
+        defaultValue={props.value}
         onChange={props.onChange}
         placeholder={props.placeholder}
         onMouseEnter={props.show}

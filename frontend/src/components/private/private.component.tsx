@@ -11,12 +11,12 @@ import {
 } from "src/core/layouts/public/interceptors/api.interceptor";
 import { setUserData } from "src/core/layouts/public/store/actions";
 import { container } from "tsyringe";
-
+  const interceptor: any = container.resolve(ApiInterceptor);
+  const interceptorRes: any = container.resolve(ApiInterceptorResponse);
 const PrivateComponent = ({ children }: any) => {
   const loading: any = useSelector((state: any) => state.publicState.loading);
   const user: any = useSelector((state: any) => state.publicState.user);
-  const interceptor: any = container.resolve(ApiInterceptor);
-  const interceptorRes: any = container.resolve(ApiInterceptorResponse);
+
   const token = Cookies.get("token");
   const dispatch: any = useDispatch();
   const [showContent,setShowContent] = useState(false)
