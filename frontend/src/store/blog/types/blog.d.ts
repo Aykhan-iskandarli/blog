@@ -11,6 +11,7 @@ export interface IBlog {
     excerpt:string | undefined,
     mtitle?:string | undefined
     mdesc?:string | undefined
+    photo?:string | undefined
 }
 
 export interface ICatAndTag {

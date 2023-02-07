@@ -21,7 +21,7 @@ export class BlogServices {
   getBlogData(params:any) {
     return this._get.setApi(API.allblogs)
     .setParams(params)
-      .requestPromise()
+    .requestPromise()
   }
 
   getBlogPhoto(slug:any) {
@@ -31,6 +31,7 @@ export class BlogServices {
 
   getBlogDetail(slug:any) {
     return this._get.setApi(API.blogDetail + `/${slug}`)
+    .setParams({})
     .requestPromise()
   }
 }

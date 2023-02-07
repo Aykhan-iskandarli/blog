@@ -1,5 +1,6 @@
 import Router from "next/router";
 import { Dispatch } from "react";
+import { BsCheckLg } from "react-icons/bs";
 import { successToast } from "src/core/shared/toast/toast";
 import { IActionCreator } from "src/root store/types/store.types";
 import { container } from "tsyringe";
@@ -104,7 +105,7 @@ export const getBlogDetailData = (slug: any) => (
   (dispatch: Dispatch<IActionCreator>) => {
     dispatch(getBlogDetailStart())
     return service.getBlogDetail(slug).then((res) => {
-     return new BlogDetailModel(res.data[0])
+     return new BlogDetailModel(res.data)
     })
       .then((res: any) => {
         dispatch(getBlogDetailSuccess(res))

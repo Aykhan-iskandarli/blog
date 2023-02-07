@@ -1,0 +1,17 @@
+@import "../../src/assets/styles/abstracts/";
+
+.blog_detail{
+ 
+    &_card{
+        background-color: $white;
+      
+        &_img{
+            width: 100%;
+            height: rem(500);
+            position: relative;
+        }
+        &_content{
+            padding: rem(20);
+        }
+    }
+}

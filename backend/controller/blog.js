@@ -105,19 +105,25 @@ exports.create = (req, res) => {
 
 
 exports.ListAllBlogCategories = async (req, res) => {
+  // pagination 
   let { pageNumber, pageSize } = req.query
-  console.log(pageNumber,pageSize)
   if (!pageNumber) pageNumber = 1;
   if (!pageSize) pageSize = 10;
   const limit = parseInt(pageSize)
   const skip = (pageNumber - 1) * pageSize
+
+  // filter
+  const { search } = req.query;
+  
   try {
-    let totalPage = await Blog.countDocuments()
-    const blog = await Blog.find({}).skip(skip).limit(limit).sort({ createdAt: -1 })
+    const blog = await Blog.find({
+      $or: [{ title: { $regex: search || "", $options: 'i' } }]
+    }).skip(skip).limit(limit).sort({ createdAt: -1 })
       .populate('categories', '_id name slug')
       .populate('tags', '_id name slug')
       .populate('postedBy', '_id name username')
       .select('_id title body mtitle mdesc slug excerpt categories tags postedBy createdAt updatedAt')
+      let totalPage = await Blog.countDocuments()
 
     if (!blog) {
       return res.status(400).json({
@@ -246,24 +252,23 @@ exports.update = (req, res) => {
 };
 
 
-exports.read = async (req, res) => {
-  const slug = req.params.slug.toLowerCase()
-
-  await Blog.find( {slug} )
-    .populate('categories', '_id name slug')
-    .populate('tags', '_id name slug')
-    .populate('postedBy', '_id name username')
-    .select('_id title mtitle body slug mdesc excerpt categories tags postedBy createdAt updatedAt')
-    .exec((err, data) => {
-      if (err) {
-        return res.status(400).json({
-          error: errorHandler(err),
-        });
-      }
-      res.status(200).json({...data})
-    })
-
-}
+exports.read = (req, res) => {
+  const slug = req.params.slug.toLowerCase();
+  Blog.findOne({ slug })
+      // .select("-photo")
+      .populate('categories', '_id name slug')
+      .populate('tags', '_id name slug')
+      .populate('postedBy', '_id name username')
+      .select('_id title body slug mtitle mdesc categories tags postedBy createdAt updatedAt')
+      .exec((err, data) => {
+          if (err) {
+              return res.json({
+                  error: errorHandler(err)
+              });
+          }
+          res.json(data);
+      });
+};
 
 
 exports.removeBlog = async (req, res) => {

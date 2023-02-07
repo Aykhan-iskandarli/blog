@@ -5,6 +5,7 @@
     height: rem(80);
     display: flex;
     align-items: center;
+    background-color: $white;
     &_container{
         
     }
@@ -17,6 +18,7 @@
        }
     }
     &_right{
+      display: flex;
         a{
           &:not(:last-child){
             margin-right: rem(15);

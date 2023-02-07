@@ -12,6 +12,7 @@ export class BlogDetailModel {
   public createdAt: string | undefined;
   public updatedAt: string | undefined;
   public postedBy: object | undefined | null=null;
+  public photo: string | undefined | null=null;
 
   constructor(item: IBlog) {
     this._setId(item);
@@ -25,6 +26,7 @@ export class BlogDetailModel {
     this._setPostedBy(item);
     this._setCreatedAt(item);
     this._setUpdatedAt(item);
+    this._setBlog(item);
   }
 
   /**
@@ -47,6 +49,18 @@ export class BlogDetailModel {
   
     this.slug = slug;
   }
+
+    /**
+   * set photo
+   * @param photo
+   * @private
+   */
+
+    private _setBlog({ photo }: IBlog) {
+  
+      this.photo = photo;
+    }
+  
 
 
    /**

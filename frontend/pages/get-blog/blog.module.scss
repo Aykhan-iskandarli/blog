@@ -7,12 +7,16 @@
         display: flex;
         align-items: center;
         flex-direction: column;
+        &_search{
+            width: rem(770);
+        }
         &_card{
             width: rem(770);
             box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+            background-color: $white;
             // padding: rem(20);
             margin: rem(20) 0;
-            @include breakpoint("1024px", "max") {
+            @include breakpoint("1024px", "max") { 
                 width: 100%;
             }
             &_content{
@@ -36,6 +40,7 @@
                     color: #130101;
                     font-weight: 600;
                 }
+             
                 &_img{
                     width: 100%;
                  

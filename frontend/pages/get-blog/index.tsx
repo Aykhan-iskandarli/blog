@@ -9,6 +9,10 @@ import Image from 'next/image'
 import { API } from 'src/core/layouts/public/configs/api.config'
 import { generateGuid } from 'src/core/layouts/public/helpers/common-functions/common-functions'
 import {BsChevronLeft, BsChevronRight,} from "react-icons/bs"
+import ButtonComponent from 'packages/RButton/button.component'
+import  Router  from 'next/router'
+import InputComponent from 'packages/RInput/input.component'
+import useDebounce from 'HOC/debounce/debounce'
 
 const BlogComponent = () => {
   const dispatch: any = useDispatch()
@@ -17,11 +21,28 @@ const BlogComponent = () => {
     pageNumber: 1,
     pageSize: 3
   })
-  let paginate = blog?.page
-  useEffect(() => {
-    dispatch(getBlogData(pageParams))
-  }, [dispatch,pageParams])
+  const [searchValue,setSearchValue] = useState<any>({
+    search:""
+  })
+const {search} = searchValue
 
+const handleChange = (e:any) =>{
+  const {name,value} = e.target
+  setSearchValue({...searchValue, [name]:value})
+
+}
+  let paginate = blog?.page
+
+  const debounceSearch = useDebounce(search,500)
+
+  useEffect(() => {
+    let param = {
+      pageNumber:pageParams.pageNumber,
+      pageSize:pageParams.pageSize,
+      search:debounceSearch
+    }
+    dispatch(getBlogData(param))
+  }, [dispatch,pageParams,debounceSearch])
 
   const handlePageClick = (e: any) => {
     const selectPage = e.selected + 1
@@ -32,6 +53,14 @@ const BlogComponent = () => {
       }
     })
   };
+
+  const handleClick = (slug:any) =>{
+    Router.push(`http://localhost:8080/get-blog/${slug}`)
+  }
+
+
+
+
   return (
     <div className={css.blog_section}>
       <div className="container">
@@ -40,12 +69,14 @@ const BlogComponent = () => {
             <div className={css.blog_container_title}>
               <h1> ALL BLOG</h1>
             </div>
+            <div className={css.blog_container_search}>
+                <InputComponent name="search" value={search} placeholder="Search..." onChange={(e:any)=>handleChange(e)}/>
+            </div>
             {blog && blog?.items?.length > 0 &&
               blog?.items.map((item: any) => (
                 <div key={generateGuid()} className={css.blog_container_card}>
                     <div className={css.blog_container_card_content_img}>
-                        <Image className={css.image} src={`${API.blogPhoto}/${item.slug}`} alt="" objectFit='fill' quality={100} width={1000}
-                          height={500}  />
+                        <Image className={css.image} src={`${API.blogPhoto}/${item.slug}`} alt="" objectFit='fill' quality={100} width={1000} height={500}  />
                     </div>
                   <div className={css.blog_container_card_content}>
                     <div className='d-flex justify-between'>
@@ -83,6 +114,9 @@ const BlogComponent = () => {
                     </div>
                     <div className={css.blog_container_card_content_desc}>
                       <span dangerouslySetInnerHTML={{ __html: item.excerpt }}></span>
+                      <div className={'mt-20'}>
+                      <ButtonComponent click={()=>handleClick(item.slug)}>Read More</ButtonComponent>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -122,5 +156,19 @@ const BlogComponent = () => {
     </div>
   )
 }
+
+// BlogComponent.getInitialProps = (pageParams:any) =>{
+//   return getBlogData(pageParams).then((data: any)=>{
+//     if(data.error){
+//       console.log(data.error)
+//     }
+//     else{
+//       return {
+//         Blogs:data.blogs
+//       }
+//     }
+//   })
+// }
+
 
 export default BlogComponent
