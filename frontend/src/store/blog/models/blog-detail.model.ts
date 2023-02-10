@@ -7,6 +7,7 @@ export class BlogDetailModel {
   public categories: string | undefined | null=null;
   public tags: string | undefined;
   public slug: string | undefined;
+  public viewCount: number | undefined;
   public mtitle?: string | undefined;
   public mdesc?: string | undefined;
   public createdAt: string | undefined;
@@ -18,6 +19,7 @@ export class BlogDetailModel {
     this._setId(item);
     this._setName(item);
     this._setBody(item)
+    this._setViewCount(item)
     this._setSlug(item);
     this._setMtitle(item);
     this._setDesc(item);
@@ -50,6 +52,16 @@ export class BlogDetailModel {
     this.slug = slug;
   }
 
+  /**
+   * set viewCount
+   * @param viewCount
+   * @private
+   */
+
+  private _setViewCount({ viewCount }: IBlog) {
+  
+    this.viewCount = viewCount;
+  }
     /**
    * set photo
    * @param photo
@@ -73,9 +85,9 @@ export class BlogDetailModel {
     const helperArr:any = []
     categories?.map((cat:any)=>(
         helperArr.push({
-            categoriesName: cat.name,
-            categoriesSlug: cat.slug,
-            categoriesId: cat._id
+            title: cat.name,
+            titleSlug: cat.slug,
+            titleId: cat._id
         })
     ))
     this.categories = helperArr;
@@ -92,9 +104,9 @@ export class BlogDetailModel {
     const helperArr:any = []
     tags?.map((tag:any)=>(
         helperArr.push({
-            tagName: tag.name,
-            tagSlug: tag.slug,
-            tagId: tag._id
+          title: tag.name,
+          titleSlug: tag.slug,
+          titleId: tag._id
         })
     ))
 
@@ -142,7 +154,6 @@ export class BlogDetailModel {
    */
 
   private _setBody({ body }: IBlog) {
-
     this.body = body;
   }
 

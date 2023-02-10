@@ -25,8 +25,11 @@
     "nodemailer": "^6.8.0",
     "nodemon": "^2.0.20",
     "react-hot-toast": "^2.4.0",
+    "react-uuid": "^2.0.0",
+    "short-unique-id": "^4.4.4",
     "shortid": "^2.2.16",
     "slugify": "^1.6.5",
-    "string-strip-html": "^4.4.1"
+    "string-strip-html": "^4.4.1",
+    "uuid": "^9.0.0"
   }
 }

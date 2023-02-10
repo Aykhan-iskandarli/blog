@@ -31,6 +31,10 @@ const blogSchema = new mongoose.Schema(
     mdesc: {
         type: String
     },
+    viewCount: {
+        type: Number,
+        default: 0
+    },
     photo: {
         data: Buffer,
         contentType: String

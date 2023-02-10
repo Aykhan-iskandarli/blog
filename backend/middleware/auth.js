@@ -26,7 +26,7 @@ exports.protect = async (req,res,next) =>{
     }
 }
 
-exports.adminMiddleWare = (req, res, nex) => {
+exports.adminMiddleWare = (req, res, next) => {
   const adminUserId = req.user._id;
   console.log(adminUserId,"adminUserId")
   User.findById(

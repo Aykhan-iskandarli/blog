@@ -9,18 +9,17 @@ import {FiDelete} from "react-icons/fi"
 import ReactPaginate from 'react-paginate';
 
 const CategoryAndTagComponent = () => {
-  const categoryList: any = useSelector((state: any) => state.category?.category);
+  const categoryList: any = useSelector((state: any) => state.categoryAndTag?.category);
   const dispatch:any = useDispatch()
   const [inputValue,setInputValue] = useState({
     name:""
   })
   const [pageParams,setPageParams] = useState({
     pageNumber:1,
-    pageSize:1
+    pageSize:10
   })
 let paginate = categoryList?.page
 
-console.log(paginate)
   const {name} = inputValue
 
 useEffect(()=>{
@@ -28,7 +27,6 @@ useEffect(()=>{
 },[pageParams])
 
 const showCategories  = useCallback((category:any)=>{
-  
 const handleDelete = async(slug:any) =>{
    await dispatch(deleteCategoryData(slug))
    dispatch(getCategory(pageParams))
@@ -96,7 +94,7 @@ const handleSubmit = async(e:any) =>{
      <h1>Category list</h1>
       {showCategoriesForm()}
       <div className="col-3">
-      {showCategories(categoryList)}
+      {showCategories(categoryList && categoryList)}
       </div>
      </div>
      <ReactPaginate

@@ -8,9 +8,10 @@ const _ = require("lodash");
 const fs = require("fs");
 const { errorHandler } = require("../middleware/customError");
 const { smartTrim } = require('../helpers/blog');
+const { v4: uuidv4 } = require('uuid');
+const Categories = require("../model/categories");
 
 exports.create = (req, res) => {
-
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
   form.parse(req, (err, fields, files) => {
@@ -52,8 +53,8 @@ exports.create = (req, res) => {
     blog.title = title;
     blog.body = body;
     blog.excerpt = smartTrim(body, 600, ' ', ' ...');
-    blog.slug = slugify(title).toLowerCase();
-    blog.mtitle = `${title} | ${process.env.APP_NAME}`;
+    blog.mtitle = title;
+    blog.slug = slugify(title + uuidv4()).toLowerCase();
     blog.mdesc = stripHtml(body.substring(0, 160));
     blog.postedBy = req.user._id;
 
@@ -114,17 +115,17 @@ exports.ListAllBlogCategories = async (req, res) => {
 
   // filter
   const { search } = req.query;
-  
+
   try {
-    const blog = await Blog.find({$or: [{ title: { $regex: search || "", $options: 'i' } }]})
-    .skip(skip)
-    .limit(limit)
-    .sort({ createdAt: -1 })
+    const blog = await Blog.find({ $or: [{ title: { $regex: search || "", $options: 'i' } }] })
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 })
       .populate('categories', '_id name slug')
       .populate('tags', '_id name slug')
       .populate('postedBy', '_id name username')
       .select('_id title body mtitle mdesc slug excerpt categories tags postedBy createdAt updatedAt')
-      let totalPage = await Blog.countDocuments({$or: [{ title: { $regex: search || "", $options: 'i' } }]})
+    let totalPage = await Blog.countDocuments({ $or: [{ title: { $regex: search || "", $options: 'i' } }] })
 
     if (!blog) {
       return res.status(400).json({
@@ -132,12 +133,12 @@ exports.ListAllBlogCategories = async (req, res) => {
       });
     }
     else {
-      if(pageNumber > Math.ceil(totalPage / limit)){
+      if (pageNumber > Math.ceil(totalPage / limit)) {
         return res.status(400).json({
           error: errorHandler("invalid error")
         });
       }
-      else{
+      else {
         res.status(200).json({
           success: true,
           blog,
@@ -145,7 +146,7 @@ exports.ListAllBlogCategories = async (req, res) => {
             totalCount: (+totalPage),
             pageIndex: (+pageNumber),
             pageSize: (+pageSize),
-            totalPages:Math.ceil(totalPage / limit),
+            totalPages: Math.ceil(totalPage / limit),
             previous: false,
             next: false
           }
@@ -253,23 +254,30 @@ exports.update = (req, res) => {
 };
 
 
-exports.read = (req, res) => {
+exports.read = async (req, res) => {
   const slug = req.params.slug.toLowerCase();
-  Blog.findOne({ slug })
-      // .select("-photo")
-      .populate('categories', '_id name slug')
-      .populate('tags', '_id name slug')
-      .populate('postedBy', '_id name username')
-      .select('_id title body slug mtitle mdesc categories tags postedBy createdAt updatedAt')
-      .exec((err, data) => {
-          if (err) {
-              return res.json({
-                  error: errorHandler(err)
-              });
-          }
-          res.json(data);
-      });
+  console.log(slug,"slug")
+  // let counter = req.body.viewCount
+  // counter++
+  // counter.save()
+  await Blog.findOneAndUpdate({ slug }, { $inc: { viewCount: 1 } }, { new: true });
+  let blog = await Blog.findOne({ slug })
+    // .select("-photo")
+    .populate('categories', '_id name slug')
+    .populate('tags', '_id name slug')
+    .populate('postedBy', '_id name username')
+    .select('_id title body viewCount slug mtitle mdesc categories tags postedBy createdAt updatedAt')
+  if (!blog) {
+    return res.json({
+      error: errorHandler("blog is not found")
+    });
+  }
+  else {
+    res.json(blog);
+  }
+
 };
+
 
 
 exports.removeBlog = async (req, res) => {
@@ -277,7 +285,7 @@ exports.removeBlog = async (req, res) => {
 
   await Blog.findOneAndRemove({ slug }).exec((err, data) => {
     if (err) {
-      console.log(err,"err")
+      console.log(err, "err")
       return res.status(400).json({
         error: errorHandler(err),
       });
@@ -289,19 +297,68 @@ exports.removeBlog = async (req, res) => {
 
 }
 
-
-
 exports.photo = (req, res) => {
   const slug = req.params.slug.toLowerCase();
   Blog.findOne({ slug })
-      .select('photo')
-      .exec((err, blog) => {
-          if (err || !blog) {
-              return res.status(400).json({
-                  error: errorHandler(err)
-              });
-          }
-          res.set('Content-Type', blog.photo.contentType);
-          return res.send(blog.photo.data);
-      });
+    .select('photo')
+    .exec((err, blog) => {
+      if (err || !blog) {
+        return res.status(400).json({
+          error: errorHandler(err)
+        });
+      }
+      res.set('Content-Type', blog.photo.contentType);
+      return res.send(blog.photo.data);
+    });
+};
+
+exports.popular = async (req, res) => {
+  await Blog.find({ viewCount: { $gte: 10 } })
+    .populate('categories', '_id name slug')
+    .populate('tags', '_id name slug')
+    .populate('postedBy', '_id name username')
+    .select('_id viewCount title body slug mtitle mdesc categories tags postedBy createdAt updatedAt')
+    .exec((err, data) => {
+      if (err) {
+        return res.status(400).json({
+          error: errorHandler(err)
+        });
+      }
+      res.json(data);
+    })
+};
+
+exports.listRelated = (req, res) => {
+  let limit = req.body.limit ? parseInt(req.body.limit) : 3;
+  const { _id, categories } = req.body.blog;
+
+  Blog.find({ _id: { $ne: _id }, categories: { $in: categories } })
+    .limit(limit)
+    .populate('postedBy', '_id name profile')
+    .select('title slug excerpt postedBy createdAt updatedAt')
+    .exec((err, blogs) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'Blogs not found'
+        });
+      }
+      res.json(blogs);
+    });
+};
+
+
+
+exports.searchBlogGetByCategories = async (req, res) => {
+  const {id}  = req.params;
+  let blog = await Blog.find({categories: id})
+  .select('-photo')
+  if (!blog) {
+    return res.json({
+      error: errorHandler("blog is not found")
+    });
+  }
+  else {
+    res.json(blog);
+  }
+
 };

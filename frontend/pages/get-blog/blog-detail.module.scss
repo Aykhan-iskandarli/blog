@@ -11,6 +11,23 @@
         }
         &_content{
             padding: rem(20);
+            &_title{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: rem(15);
+                h2{
+                    font-size: rem(20);
+                }
+                span{
+                    color: rgb(95, 95, 95);
+                    display: flex;
+                    align-items: center;
+                    svg{
+                        margin-right: rem(8);
+                    }
+                }
+            }
         }
     }
     &_skeleton_container{

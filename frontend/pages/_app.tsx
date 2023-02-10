@@ -15,6 +15,9 @@ import PublishContentComponent from "components/publish-content/publish-content.
 import '../src/core/shared/toast/toast.scss'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from "react-toastify";
+import 'react-loading-skeleton/dist/skeleton.css'
+import { container } from "tsyringe";
+import { ApiInterceptor, ApiInterceptorResponse } from "src/core/layouts/public/interceptors/api.interceptor";
 export default function App({ Component, pageProps }: AppProps) {
   Router.events.on("routeChangeStart", () => NProgress.start());
   Router.events.on("routeChangeComplete", () => NProgress.done());
@@ -26,6 +29,7 @@ export default function App({ Component, pageProps }: AppProps) {
       Router.push("/login")
     }
   },[token])
+
   return (
     <Provider store={store}>
       {

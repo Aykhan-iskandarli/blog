@@ -15,8 +15,8 @@ export class ApiInterceptor extends RequestInterceptor {
         this.request();
     }
     request() {
-    const token = Cookies.get("token");
         this.intercept().use((req:any) => {
+            const token = Cookies.get("token");
             req.headers = {
                 ...req.headers,
                 Authorization: 'Bearer ' + token,

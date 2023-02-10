@@ -9,8 +9,9 @@ import { API } from 'src/core/layouts/public/configs/api.config';
 import { getBlogDetailData } from 'store/blog/store/action';
 import css from "./blog-detail.module.scss"
 import Skeleton from 'react-loading-skeleton'
-
+import {AiOutlineEye} from "react-icons/ai"
 import 'react-loading-skeleton/dist/skeleton.css'
+import TagsAndCategoryComponent from 'components/tags-and-category/tags-and-category';
 const BlogDetail = () => {
     const dispatch: any = useDispatch()
     const blog: any = useSelector((state: any) => state.blogState?.blogDetail);
@@ -26,6 +27,7 @@ const BlogDetail = () => {
             <BannerComponent title="Single Blog Post" current="Blog" />
             <div className="container">
                 <div className="row justify-center">
+                    <div className="col-9">
                     {
                         blog?.slug ?
                             <div className={css.blog_detail_card}>
@@ -36,7 +38,10 @@ const BlogDetail = () => {
                                 </div>
                                 <div className={css.blog_detail_card_content}>
                                     <div className={css.blog_detail_card_content_title}>
-                                        <h2>{blog?.mtitle}</h2>
+                                     <div className="col-10">
+                                     <h2>{blog?.mtitle}</h2>
+                                     </div>
+                                        <span><AiOutlineEye/> View count: {blog?.viewCount}</span>
                                     </div>
                                     <div className={css.blog_detail_card_content_date}>
                                         <span>{moment(blog.createdAt).format("MM.DD.YYYY")}</span>
@@ -49,6 +54,22 @@ const BlogDetail = () => {
                                 <Skeleton count={1} height={500} className={css.blog_detail_skeleton} />
                             </div>
                     }
+                    </div>
+                    <div className="col-3">
+                        <div className={css.blog_detail_categories}>
+                            <div className={css.blog_detail_categories_title}>
+                                <h3>Categories</h3>
+                            </div>
+                            <TagsAndCategoryComponent data={blog?.categories} />
+                        </div>
+                        <div className={css.blog_detail_tags}>
+                            <div className={css.blog_detail_tags_title}>
+                                <h3>Tags</h3>
+                            </div>
+                            <TagsAndCategoryComponent data={blog?.tags} tag/>
+                        </div>
+                    </div>
+   
                 </div>
             </div>
         </div>

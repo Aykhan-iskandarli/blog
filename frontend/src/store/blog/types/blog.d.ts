@@ -1,6 +1,7 @@
 export interface IBlog {
     title: string | undefined,
     _id: number | string | undefined
+    viewCount?: number | undefined
     tags: ICatAndTag[]
     categories: ICatAndTag[]
     slug:string | undefined,
