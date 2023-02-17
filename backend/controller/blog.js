@@ -110,6 +110,7 @@ exports.uploadPhoto = async (req, res) => {
   try {
     const {title,body,categories,tags} = req.body
     const blog = await new Blog({ title, body, photo: req.file.path, categories, tags });
+    
     blog.save((err, result) => {
       if (err) {
         return res.status(400).json({

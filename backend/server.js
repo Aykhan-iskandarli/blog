@@ -24,6 +24,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser())
+app.use(express.static('public'))
 app.use(cors())
 //cors
 if (process.env.NODE_ENV === "development") {
@@ -37,46 +38,6 @@ app.use("/api", tags);
 
 
 app.use("/api", blog);
-const storage = multer.diskStorage({
-    destination: './public/uploads/',
-    filename: function (req, file, cb) {
-        console.log(file,"file")
-      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-  });
-  
-  const upload = multer({
-    storage: storage,
-    limits: { fileSize: 1000000 },
-    fileFilter: function (req, file, cb) {
-      checkFileType(file, cb);
-    }
-  }).single('photo');
-  
-  function checkFileType(file, cb) {
-    const filetypes = /jpeg|jpg|png|gif/;
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = filetypes.test(file.mimetype);
-  
-    if (mimetype && extname) {
-      return cb(null, true);
-    } else {
-      cb('Hata: Yalnızca resim dosyaları yüklenebilir!');
-    }
-  }
-
-
-// app.post('/upload', upload, async (req, res) => {
-//     console.log(req.file.path,"file")
-//     try {
-//       const { title, description } = req.body;
-//       const newBlog = new Blog({ title, description, photo: req.file.path });
-//       await newBlog.save();
-//       res.send('Blog başarıyla oluşturuldu!');
-//     } catch (err) {
-//       res.status(400).send(err.message);
-//     }
-//   });
 
 
 // Error Handler Middleware

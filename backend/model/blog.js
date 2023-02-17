@@ -35,10 +35,9 @@ const blogSchema = new mongoose.Schema(
         type: Number,
         default: 0
     },
-    photo: {
-        data: Buffer,
-        contentType: String
-    },
+        photo: {
+            type: String
+        },
     categories: [{ type: ObjectId, ref: 'Categories', required: true }],
     tags: [{ type: ObjectId, ref: 'Tags', required: true }],
     postedBy: {
