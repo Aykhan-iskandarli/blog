@@ -28,6 +28,7 @@ const BlogComponent = () => {
 
   useEffect(() => {
     dispatch(getCategory({}))
+    // dispatch(getBlogDetailData())
   }, [])
 
   useEffect(() => {

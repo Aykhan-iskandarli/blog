@@ -11,12 +11,20 @@
             display: flex;
             &_input{
                 width: 100%;
-            
             }
             input{
                 border: 1px solid red !important;
             }
         }
     }
-  
+  &_image{
+    position: relative;
+    width: 100%;
+    height: rem(300);
+    margin: rem(20) 0;
+    img{
+        object-fit: fill;
+        width: 100%;
+    }
+  }
 }

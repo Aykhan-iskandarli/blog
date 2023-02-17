@@ -20,7 +20,8 @@ exports.create = (req, res) => {
         error: "Image could not upload",
       });
     }
-
+console.log(files.photo.filepath,"file")
+console.log(files.photo.filepath,"type")
     const { title, body, categories, tags } = fields;
 
 
@@ -54,7 +55,7 @@ exports.create = (req, res) => {
     blog.body = body;
     blog.excerpt = smartTrim(body, 600, ' ', ' ...');
     blog.mtitle = title;
-    blog.slug = slugify(title + uuidv4()).toLowerCase();
+    blog.slug = slugify(title).toLowerCase();
     blog.mdesc = stripHtml(body.substring(0, 160));
     blog.postedBy = req.user._id;
 
@@ -69,7 +70,7 @@ exports.create = (req, res) => {
       }
 
       blog.photo.data = fs.readFileSync(files.photo.filepath);
-      blog.photo.contentType = files.photo.mimetype;
+      blog.photo.contentType = files.photo.filepath.mimetype;
     }
 
     blog.save((err, result) => {
@@ -104,6 +105,114 @@ exports.create = (req, res) => {
   });
 };
 
+exports.uploadPhoto = async (req, res) => {
+  console.log(req.file.path, "file")
+  try {
+    const {title,body,categories,tags} = req.body
+    const blog = await new Blog({ title, body, photo: req.file.path, categories, tags });
+    blog.save((err, result) => {
+      if (err) {
+        return res.status(400).json({
+          error: errorHandler(err),
+        });
+      }
+      let arrayOfCategories = categories && categories.split(",");
+      let arrayOfTags = tags && tags.split(",");
+      // res.json(result);
+      Blog.findByIdAndUpdate(result._id, { $push: { categories: arrayOfCategories } }, { new: true }).exec(
+        (err, result) => {
+          if (err) {
+            return res.status(400).json({
+              error: errorHandler(err)
+            });
+          } else {
+            Blog.findByIdAndUpdate(result._id, { $push: { tags: arrayOfTags } }, { new: true }).exec(
+              (err, result) => {
+                if (err) {
+                  return res.status(400).json({
+                    error: errorHandler(err)
+                  });
+                } else {
+                  res.status(201).json(result);
+                }
+              }
+            );
+          }
+        }
+      );
+    });
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+
+
+}
+
+
+
+exports.update = (req, res) => {
+  const slug = req.params.slug.toLowerCase();
+
+  Blog.findOne({ slug }).exec((err, oldBlog) => {
+      if (err) {
+          return res.status(400).json({
+              error: errorHandler(err)
+          });
+      }
+
+      let form = new formidable.IncomingForm();
+      form.keepExtensions = true;
+
+      form.parse(req, (err, fields, files) => {
+          if (err) {
+              return res.status(400).json({
+                  error: 'Image could not upload'
+              });
+          }
+
+          let slugBeforeMerge = oldBlog.slug;
+          oldBlog = _.merge(oldBlog, fields);
+          oldBlog.slug = slugBeforeMerge;
+
+          const { body,categories, tags } = fields;
+
+          if (body) {
+              oldBlog.body = body
+              oldBlog.excerpt = smartTrim(body, 320, ' ', ' ...');
+              oldBlog.mdesc = stripHtml(body.substring(0, 160));
+          }
+
+          if (categories) {
+              oldBlog.categories = categories.split(',');
+          }
+
+          if (tags) {
+              oldBlog.tags = tags.split(',');
+          }
+       
+
+          if (files.photo) {
+              if (files.photo.size > 10000000) {
+                  return res.status(400).json({
+                      error: 'Image should be less then 1mb in size'
+                  });
+              }
+              oldBlog.photo.data =fs.readFileSync(files.photo.filepath);
+              oldBlog.photo.contentType = files.photo.mimetype;
+          }
+
+          oldBlog.save((err, result) => {
+              if (err) {
+                  return res.status(400).json({
+                      error: errorHandler(err)
+                  });
+              }
+              // result.photo = undefined;
+              res.json(result);
+          });
+      });
+  });
+};
 
 exports.ListAllBlogCategories = async (req, res) => {
   // pagination 
@@ -160,7 +269,6 @@ exports.ListAllBlogCategories = async (req, res) => {
   }
 };
 
-
 exports.list = async (req, res) => {
   try {
     const blog = await Blog.find({})
@@ -186,77 +294,9 @@ exports.list = async (req, res) => {
   }
 };
 
-
-
-exports.update = (req, res) => {
-  const slug = req.params.toLowerCase()
-
-  Blog.findOne({ slug }).exec((err, oldBlog) => {
-    if (err) {
-      return res.status(400).json({
-        error: errorHandler(err),
-      });
-    }
-    let form = new formidable.IncomingForm();
-    form.keepExtensions = true;
-    form.parse(req, (err, fields, files) => {
-      if (err) {
-        return res.status(400).json({
-          error: "Image could not upload",
-        });
-
-      }
-      let slugBeforeMerge = oldBlog.slug
-      oldBlog = _merge(oldBlog, fields)
-      oldBlog.slug = slugBeforeMerge
-
-      const { desc, body, categories, tags } = fields;
-
-
-      if (body) {
-        oldBlog.excerpt = smartTrim(body, 30, ' ', ' ...');
-        oldBlog.mdesc = stripHtml(body.substring(0, 20));
-
-      }
-
-      if (categories) {
-        oldBlog.categories = categories.split(',');
-
-      }
-
-      if (tags) {
-        oldBlog.tags = tags.split(",");
-
-      }
-
-      if (files.photo) {
-        if (files.photo.size > 10000000) {
-          return res.status(400).json({
-            error: "Image should be less then 1mb in size",
-          });
-        }
-
-        oldBlog.photo.data = fs.readFileSync(files.photo.filepath);
-        oldBlog.photo.contentType = files.photo.mimetype;
-      }
-
-      oldBlog.save((err, result) => {
-        if (err) {
-          return res.status(400).json({
-            error: errorHandler(err),
-          });
-        }
-        res.json(result);
-      });
-    });
-  })
-
-};
-
-
 exports.read = async (req, res) => {
   const slug = req.params.slug.toLowerCase();
-  console.log(slug,"slug")
+  console.log(slug, "slug")
   // let counter = req.body.viewCount
   // counter++
   // counter.save()
@@ -278,7 +318,28 @@ exports.read = async (req, res) => {
 
 };
 
+exports.getBlogById = async (req, res) => {
+  const slug = req.params.slug.toLowerCase();
 
+  try {
+    let blog = await Blog.findOne({ slug })
+      .populate('categories', '_id name slug')
+      .populate('tags', '_id name slug')
+      .select('_id title body categories tags')
+    if (!blog) {
+      return res.json({
+        error: errorHandler("blog is not found")
+      });
+    }
+    else {
+      res.json(blog);
+    }
+  } catch (error) {
+    return res.json({
+      error: errorHandler(error)
+    });
+  }
+};
 
 exports.removeBlog = async (req, res) => {
   const slug = req.params.slug.toLowerCase()
@@ -346,12 +407,10 @@ exports.listRelated = (req, res) => {
     });
 };
 
-
-
 exports.searchBlogGetByCategories = async (req, res) => {
-  const {id}  = req.params;
-  let blog = await Blog.find({categories: id})
-  .select('-photo')
+  const { id } = req.params;
+  let blog = await Blog.find({ categories: id })
+    .select('-photo')
   if (!blog) {
     return res.json({
       error: errorHandler("blog is not found")

@@ -21,6 +21,7 @@ const InputComponent = (props: InputProps) => {
         onKeyDown={props.onKeyDown}
         maxLength={props.maxLength}
         accept={props.accept}
+        checked={props.checked}
       />
       {props.children}
       {props.error && <div className="error-text">{props.error}</div>}

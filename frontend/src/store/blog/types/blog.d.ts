@@ -15,10 +15,20 @@ export interface IBlog {
     photo?:string | undefined
 }
 
+export interface IBlogById {
+    _id: number | string | undefined 
+    body:string | undefined
+    title:string | undefined
+    categories:ICatAndTag[]
+    tags:ICatAndTag[]
+}
+
+
+
 export interface ICatAndTag {
     _id: number | string | undefined 
     name:string | undefined
-    slug:string | undefined
+    slug?:string | undefined
 }
 
 
@@ -32,5 +42,8 @@ export interface CategoryAndTagReducerState{
 export interface IBlogReducerState{
     blog:[],
     blogDetail:[]
+    blogById: [],
     error:[],
 }
+
+

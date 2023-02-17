@@ -4,7 +4,7 @@ import 'quill/dist/quill.snow.css';
 import { useEffect, useState } from 'react';
 
 
-const ReactQuillComponent = ({quillContent, setQuillContent}:any) => {
+const ReactQuillComponent = ({quillContent, setQuillContent,blog}:any) => {
   const { quill, quillRef, Quill } = useQuill({
     modules: { blotFormatter: {}, }
   });
@@ -13,14 +13,32 @@ const ReactQuillComponent = ({quillContent, setQuillContent}:any) => {
     Quill.register('modules/blotFormatter', BlotFormatter.default)
   }
 
+  useEffect(()=>{
+    blog && blog?.body
+  },[])
+
+
   useEffect(() => {
+  if(blog && blog?.body){
     if (quill) {
-      quill.clipboard.dangerouslyPasteHTML(quillContent);
+      quill?.clipboard?.dangerouslyPasteHTML(blog && blog?.body && blog?.body);
       quill.on('text-change', () => {
         setQuillContent(quill.root.innerHTML)
       });
+
     }
-  }, [quill]);
+  }
+  else{
+    if (quill) {
+      quill?.clipboard?.dangerouslyPasteHTML(quillContent);
+
+      quill.on('text-change', () => {
+        setQuillContent(quill.root.innerHTML)
+      });
+
+    }
+  }
+  }, [quill,blog && blog.body]);
 
   return (
 

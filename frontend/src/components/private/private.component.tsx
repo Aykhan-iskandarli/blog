@@ -27,6 +27,7 @@ const PrivateComponent = ({ children }: any) => {
       "/",
       "/admin/crud/category-tag",
       "/admin/crud/blog",
+      "/admin/crud/blog/[edit]",
       "/get-blog",
       "/get-blog/[slug]",
     ],

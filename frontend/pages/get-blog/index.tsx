@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ReactPaginate from 'react-paginate'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { getBlogData } from 'store/blog/store/action'
+import { deleteBlogData, getBlogData } from 'store/blog/store/action'
 import css from "./blog.module.scss"
 import moment from "moment"
 import Image from 'next/image'
@@ -24,7 +24,7 @@ const BlogComponent = () => {
   const [search,setSearch] = useState<any>()
 
 
-
+console.log(blog?.items,"blog")
 const handleChange = debounce((e: any) => { 
   setSearch(e.target.value.toLocaleLowerCase('en-En'))
   setPageParams({
@@ -58,9 +58,23 @@ const handleChange = debounce((e: any) => {
     Router.push(`http://localhost:8080/get-blog/${slug}`)
   }
 
+  const handleEdit = (slug:any) =>{
+    Router.push(`http://localhost:8080/admin/crud/blog/${slug}`)
+  }
+
+  const handleDelete = (slug:any) =>{
+    try{
+       dispatch(deleteBlogData(slug))
+            dispatch(getBlogData({}))
+    }catch(error){
+      console.log("error",error)
+    }
+  
+  }
+
 useEffect(()=>{
-  blog && blog?.items
-},[])
+  
+},[API.blogPhoto])
 
 
   return (
@@ -74,11 +88,14 @@ useEffect(()=>{
             <div className={css.blog_container_search}>
                 <InputComponent name="search" value={search} placeholder="Search..." onChange={(e:any)=>handleChange(e)}/>
             </div>
-            {blog && blog?.items?.length > 0 &&
+            {blog && blog?.items?.length > 0 ?
               blog?.items.map((item: any) => (
                 <div key={generateGuid()} className={css.blog_container_card}>
                     <div className={css.blog_container_card_content_img}>
-                        <Image className={css.image} src={`${API.blogPhoto}/${item.slug}`} alt="" objectFit='fill' quality={100} width={1000} height={500}  />
+                       {/* {
+                        item.slug && 
+                         <Image className={css.image} src={`${API.blogPhoto}/${item.slug}`} alt=""  layout='fill' />
+                       } */}
                     </div>
                   <div className={css.blog_container_card_content}>
                     <div className='d-flex justify-between'>
@@ -115,14 +132,19 @@ useEffect(()=>{
                       <h2>{item.title}</h2>
                     </div>
                     <div className={css.blog_container_card_content_desc}>
-                      <span dangerouslySetInnerHTML={{ __html: item.excerpt }}></span>
+                      <span dangerouslySetInnerHTML={{ __html: item && item?.excerpt }}></span>
                       <div className={'mt-20'}>
                       <ButtonComponent click={()=>handleClick(item.slug)}>Read More</ButtonComponent>
                       </div>
                     </div>
+                    <div className={'d-flex justify-end'}>
+                      <ButtonComponent className={"mr-14"} click={()=>handleEdit(item.slug)}>Edit</ButtonComponent>
+                      <ButtonComponent className={css.blog_container_btn_delete} click={()=>handleDelete(item.slug)}>Delete</ButtonComponent>
+
+                      </div>
                   </div>
                 </div>
-              ))
+              )):<h1>Blog not Found</h1>
             }
           </div>
         </div>

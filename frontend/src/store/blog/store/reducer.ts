@@ -5,6 +5,7 @@ import { BlogActionTypes } from "./action-types";
 const initialState: IBlogReducerState = {
     blog: [],
     blogDetail: [],
+    blogById: [],
     error: []
 }
 
@@ -34,6 +35,22 @@ export const BlogReducerState = (state = initialState, action: any) => {
                 blogDetail: action.payload
             }
         case BlogActionTypes.GET_BLOG_DETAIL_FAIL:
+            return {
+                ...state,
+                error: action.payload
+            }
+
+        case BlogActionTypes.GET_BLOG_BY_ID_START:
+            return {
+                ...state,
+            }
+
+        case BlogActionTypes.GET_BLOG_BY_ID_SUCCESS:
+            return {
+                ...state,
+                blogById: action.payload
+            }
+        case BlogActionTypes.GET_BLOG_BY_ID_FAIL:
             return {
                 ...state,
                 error: action.payload

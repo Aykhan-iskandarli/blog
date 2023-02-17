@@ -14,6 +14,8 @@ export const API = {
 
   tags: environment + base + "tags",
   blogs: environment + base + "blog",
+  blogUpdateandRemove: environment + base + "blogs",
+  blogEdit: environment + base + "blog-edit",
   allblogs: environment + base + "allBlogCategoriesAndTags",
   blogPhoto: environment + base + "blog/photo",
   blogDetail: environment + base + "blog-detail",

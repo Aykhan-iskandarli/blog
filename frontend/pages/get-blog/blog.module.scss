@@ -42,8 +42,9 @@
                 }
              
                 &_img{
+                    position: relative;
                     width: 100%;
-                 
+                    height: rem(400);
                 }
                 &_author{
                     border: rem(1) solid #e4e2e2;
@@ -103,6 +104,9 @@
                     }
                 }
             }
+        }
+        &_btn_delete{
+            background-color: crimson !important;
         }
     }
 }

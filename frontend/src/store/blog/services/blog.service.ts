@@ -18,6 +18,18 @@ export class BlogServices {
       .requestPromise()
   }
 
+  
+  putBlogData(data:any,slug:any) {
+    return this._put.setApi(API.blogUpdateandRemove + "/" + slug)
+      .setPayload(data)
+      .requestPromise()
+  }
+  deleteBlogData(slug:any) {
+    return this._delete.setApi(API.blogUpdateandRemove + "/" + slug)
+      .requestPromise()
+  }
+
+
   getBlogData(params:any) {
     return this._get.setApi(API.allblogs)
     .setParams(params)
@@ -34,4 +46,11 @@ export class BlogServices {
     .setParams({})
     .requestPromise()
   }
+
+  getBlogById(slug:any) {
+    return this._get.setApi(API.blogEdit + `/${slug}`)
+    .setParams({})
+    .requestPromise()
+  }
+
 }

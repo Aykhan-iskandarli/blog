@@ -4,6 +4,7 @@ import { BsCheckLg } from "react-icons/bs";
 import { successToast } from "src/core/shared/toast/toast";
 import { IActionCreator } from "src/root store/types/store.types";
 import { container } from "tsyringe";
+import { BlogByIdModel } from "../models/blog-by-id.model";
 import { BlogDetailModel } from "../models/blog-detail.model";
 import { BlogModel } from "../models/blog.model";
 import { BlogServices } from "../services/blog.service";
@@ -49,6 +50,30 @@ export const getBlogStart = (): any => (
     }
   )
 
+  export const  putBlogData = (data:any,slug:any) => (
+    (dispatch: Dispatch<IActionCreator>) => {
+      return service.putBlogData(data,slug)
+        .then((res) => {
+          successToast('Uğurla dəyişdirildi');
+          Router.push("/get-blog");
+          return Promise.resolve(res.data);
+        }).catch(err => {
+          return Promise.reject(err);
+        })
+    }
+  )
+
+  export const  deleteBlogData = (slug:any) => (
+    (dispatch: Dispatch<IActionCreator>) => {
+      return service.deleteBlogData(slug)
+        .then((res) => {
+          successToast('Silindi');
+          return Promise.resolve(res.data);
+        }).catch(err => {
+          return Promise.reject(err);
+        })
+    }
+  )
 
   export const  getBlogData = (param:any) => (
     (dispatch: Dispatch<IActionCreator>) => {
@@ -100,6 +125,7 @@ export const getBlogDetailStart = (): any => (
       payload: data
     }
   )
+
   
 export const getBlogDetailData = (slug: any) => (
   (dispatch: Dispatch<IActionCreator>) => {
@@ -112,6 +138,45 @@ export const getBlogDetailData = (slug: any) => (
       })
       .catch(err => {
         dispatch(getBlogDetailFail(err))
+      })
+  }
+)
+
+
+export const getBlogByIdStart = (): any => (
+  {
+    type: BlogActionTypes.GET_BLOG_BY_ID_START
+  }
+)
+
+export const getBlogByIdFail = (err: any): any => (
+  {
+    type: BlogActionTypes.GET_BLOG_BY_ID_FAIL,
+    payload: err
+  }
+)
+
+export const getBlogByIdSuccess = (data: any): any => (
+  {
+    type: BlogActionTypes.GET_BLOG_BY_ID_SUCCESS,
+    payload: data
+  }
+)
+
+
+
+
+export const getBlogById = (slug: any) => (
+  (dispatch: Dispatch<IActionCreator>) => {
+    dispatch(getBlogByIdStart())
+    return service.getBlogById(slug).then((res) => {
+     return new BlogByIdModel(res.data)
+    })
+      .then((res: any) => {
+        dispatch(getBlogByIdSuccess(res))
+      })
+      .catch(err => {
+        dispatch(getBlogByIdFail(err))
       })
   }
 )

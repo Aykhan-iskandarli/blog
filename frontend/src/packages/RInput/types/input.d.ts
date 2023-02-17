@@ -18,5 +18,6 @@ export interface InputProps {
   close?: function,
   onKeyDown?:function,
   maxLength?:number,
-  accept?:any
+  accept?:any,
+  checked?:any
 }
