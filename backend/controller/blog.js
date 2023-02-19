@@ -11,106 +11,23 @@ const { smartTrim } = require('../helpers/blog');
 const { v4: uuidv4 } = require('uuid');
 const Categories = require("../model/categories");
 
-exports.create = (req, res) => {
-  let form = new formidable.IncomingForm();
-  form.keepExtensions = true;
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      return res.status(400).json({
-        error: "Image could not upload",
-      });
-    }
-console.log(files.photo.filepath,"file")
-console.log(files.photo.filepath,"type")
-    const { title, body, categories, tags } = fields;
 
 
-    if (!title || !title.length) {
-      return res.status(400).json({
-        error: 'title is required'
-      });
-    }
-
-    if (!body || body.length < 100) {
-      return res.status(400).json({
-        error: 'Content is too short'
-      });
-    }
-
-    if (!categories || categories.length === 0) {
-      return res.status(400).json({
-        error: 'At least one category is required'
-      });
-    }
-
-    if (!tags || tags.length === 0) {
-      return res.status(400).json({
-        error: 'At least one tag is required'
-      });
-    }
-
-
-    let blog = new Blog();
-    blog.title = title;
-    blog.body = body;
-    blog.excerpt = smartTrim(body, 600, ' ', ' ...');
-    blog.mtitle = title;
-    blog.slug = slugify(title).toLowerCase();
-    blog.mdesc = stripHtml(body.substring(0, 160));
-    blog.postedBy = req.user._id;
-
-    let arrayOfCategories = categories && categories.split(",");
-    let arrayOfTags = tags && tags.split(",");
-
-    if (files.photo) {
-      if (files.photo.size > 10000000) {
-        return res.status(400).json({
-          error: "Image should be less then 1mb in size",
-        });
-      }
-
-      blog.photo.data = fs.readFileSync(files.photo.filepath);
-      blog.photo.contentType = files.photo.filepath.mimetype;
-    }
-
-    blog.save((err, result) => {
-      if (err) {
-        return res.status(400).json({
-          error: errorHandler(err),
-        });
-      }
-      // res.json(result);
-      Blog.findByIdAndUpdate(result._id, { $push: { categories: arrayOfCategories } }, { new: true }).exec(
-        (err, result) => {
-          if (err) {
-            return res.status(400).json({
-              error: errorHandler(err)
-            });
-          } else {
-            Blog.findByIdAndUpdate(result._id, { $push: { tags: arrayOfTags } }, { new: true }).exec(
-              (err, result) => {
-                if (err) {
-                  return res.status(400).json({
-                    error: errorHandler(err)
-                  });
-                } else {
-                  res.status(201).json(result);
-                }
-              }
-            );
-          }
-        }
-      );
-    });
-  });
-};
-
-exports.uploadPhoto = async (req, res) => {
-  console.log(req.file.path, "file")
+exports.create = async (req, res) => {
   try {
-    const {title,body,categories,tags} = req.body
-    const blog = await new Blog({ title, body, photo: req.file.path, categories, tags });
-    
+    const { title, body, categories, tags } = req.body;
+    const blog = await new Blog({
+      title,
+      body,
+      mdesc: stripHtml(body.substring(0, 160)),
+      excerpt: smartTrim(body, 600, " ", " ..."),
+      photo: req.file.filename,
+      postedBy: req.user._id,
+      mtitle: title,
+      slug: slugify(title).toLowerCase(),
+      categories,
+      tags,
+    });
     blog.save((err, result) => {
       if (err) {
         return res.status(400).json({
@@ -120,100 +37,140 @@ exports.uploadPhoto = async (req, res) => {
       let arrayOfCategories = categories && categories.split(",");
       let arrayOfTags = tags && tags.split(",");
       // res.json(result);
-      Blog.findByIdAndUpdate(result._id, { $push: { categories: arrayOfCategories } }, { new: true }).exec(
-        (err, result) => {
-          if (err) {
-            return res.status(400).json({
-              error: errorHandler(err)
-            });
-          } else {
-            Blog.findByIdAndUpdate(result._id, { $push: { tags: arrayOfTags } }, { new: true }).exec(
-              (err, result) => {
-                if (err) {
-                  return res.status(400).json({
-                    error: errorHandler(err)
-                  });
-                } else {
-                  res.status(201).json(result);
-                }
-              }
-            );
-          }
+      Blog.findByIdAndUpdate(
+        result._id,
+        { $push: { categories: arrayOfCategories } },
+        { new: true }
+      ).exec((err, result) => {
+        if (err) {
+          return res.status(400).json({
+            error: errorHandler(err),
+          });
+        } else {
+          Blog.findByIdAndUpdate(
+            result._id,
+            { $push: { tags: arrayOfTags } },
+            { new: true }
+          ).exec((err, result) => {
+            if (err) {
+              return res.status(400).json({
+                error: errorHandler(err),
+              });
+            } else {
+              res.status(201).json(result);
+            }
+          });
         }
-      );
+      });
     });
   } catch (err) {
     res.status(400).send(err.message);
   }
+};
 
+exports.updateBlog = async (req, res) => {
+  try {
+    const slug = req.params.slug.toLowerCase();
+    const { title, body, categories, tags } = req.body;
+
+    // Find the blog post to update by ID
+    let blog = await Blog.findOne({slug});
+
+    if (!blog) {
+      return res.status(404).json({ error: "Blog post not found" });
+    }
+
+    // Update the blog post fields
+    blog.title = title;
+    blog.body = body;
+    blog.mdesc = stripHtml(body.substring(0, 160));
+    blog.excerpt = smartTrim(body, 600, " ", " ...");
+    blog.categories = categories;
+    blog.tags = tags;
+
+    // Save the updated blog post
+    blog = await blog.save();
+
+    // Update the categories and tags arrays
+    let arrayOfCategories = categories && categories.split(",");
+    let arrayOfTags = tags && tags.split(",");
+    blog = await Blog.findByIdAndUpdate(
+      blog._id,
+      { $push: { categories: arrayOfCategories, tags: arrayOfTags } },
+      { new: true }
+    );
+
+    res.status(200).json(blog);
+  } catch (err) {
+    res.status(400).json({ error: errorHandler(err) });
+  }
 
 }
 
 
+// exports.update = (req, res) => {
+//   const slug = req.params.slug.toLowerCase();
 
-exports.update = (req, res) => {
-  const slug = req.params.slug.toLowerCase();
+//   Blog.findOne({ slug }).exec((err, oldBlog) => {
+//       if (err) {
+//           return res.status(400).json({
+//               error: errorHandler(err)
+//           });
+//       }
 
-  Blog.findOne({ slug }).exec((err, oldBlog) => {
-      if (err) {
-          return res.status(400).json({
-              error: errorHandler(err)
-          });
-      }
+//       let form = new formidable.IncomingForm();
+//       form.keepExtensions = true;
 
-      let form = new formidable.IncomingForm();
-      form.keepExtensions = true;
+//       form.parse(req, (err, fields, files) => {
+//           if (err) {
+//               return res.status(400).json({
+//                   error: 'Image could not upload'
+//               });
+//           }
 
-      form.parse(req, (err, fields, files) => {
-          if (err) {
-              return res.status(400).json({
-                  error: 'Image could not upload'
-              });
-          }
+//           let slugBeforeMerge = oldBlog.slug;
+//           oldBlog = _.merge(oldBlog, fields);
+//           oldBlog.slug = slugBeforeMerge;
 
-          let slugBeforeMerge = oldBlog.slug;
-          oldBlog = _.merge(oldBlog, fields);
-          oldBlog.slug = slugBeforeMerge;
+//           const { body,categories, tags } = fields;
 
-          const { body,categories, tags } = fields;
+//           if (body) {
+//               oldBlog.body = body
+//               oldBlog.excerpt = smartTrim(body, 320, ' ', ' ...');
+//               oldBlog.mdesc = stripHtml(body.substring(0, 160));
+//           }
 
-          if (body) {
-              oldBlog.body = body
-              oldBlog.excerpt = smartTrim(body, 320, ' ', ' ...');
-              oldBlog.mdesc = stripHtml(body.substring(0, 160));
-          }
+//           if (categories) {
+//               oldBlog.categories = categories.split(',');
+//           }
 
-          if (categories) {
-              oldBlog.categories = categories.split(',');
-          }
-
-          if (tags) {
-              oldBlog.tags = tags.split(',');
-          }
+//           if (tags) {
+//               oldBlog.tags = tags.split(',');
+//           }
        
 
-          if (files.photo) {
-              if (files.photo.size > 10000000) {
-                  return res.status(400).json({
-                      error: 'Image should be less then 1mb in size'
-                  });
-              }
-              oldBlog.photo.data =fs.readFileSync(files.photo.filepath);
-              oldBlog.photo.contentType = files.photo.mimetype;
-          }
+//           if (files.photo) {
+//               if (files.photo.size > 10000000) {
+//                   return res.status(400).json({
+//                       error: 'Image should be less then 1mb in size'
+//                   });
+//               }
+//               oldBlog.photo.data =fs.readFileSync(files.photo.filepath);
+//               oldBlog.photo.contentType = files.photo.mimetype;
+//           }
 
-          oldBlog.save((err, result) => {
-              if (err) {
-                  return res.status(400).json({
-                      error: errorHandler(err)
-                  });
-              }
-              // result.photo = undefined;
-              res.json(result);
-          });
-      });
-  });
-};
+//           oldBlog.save((err, result) => {
+//               if (err) {
+//                   return res.status(400).json({
+//                       error: errorHandler(err)
+//                   });
+//               }
+//               // result.photo = undefined;
+//               res.json(result);
+//           });
+//       });
+//   });
+// };
 
 exports.ListAllBlogCategories = async (req, res) => {
   // pagination 
@@ -234,7 +191,7 @@ exports.ListAllBlogCategories = async (req, res) => {
       .populate('categories', '_id name slug')
       .populate('tags', '_id name slug')
       .populate('postedBy', '_id name username')
-      .select('_id title body mtitle mdesc slug excerpt categories tags postedBy createdAt updatedAt')
+      .select('_id title body photo mtitle mdesc slug excerpt categories tags createdAt updatedAt')
     let totalPage = await Blog.countDocuments({ $or: [{ title: { $regex: search || "", $options: 'i' } }] })
 
     if (!blog) {
